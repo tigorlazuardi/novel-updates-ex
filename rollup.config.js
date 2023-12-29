@@ -6,6 +6,7 @@ import replace from "@rollup/plugin-replace";
 import resolve from "@rollup/plugin-node-resolve";
 import copy from "rollup-plugin-copy";
 import commonjs from "@rollup/plugin-commonjs";
+import cleanup from "rollup-plugin-cleanup";
 
 const production = !process.env.ROLLUP_WATCH;
 if (production) process.env.NODE_ENV = "production";
@@ -17,7 +18,7 @@ export default defineConfig([
         input: "src/content/index.ts",
         output: {
             sourcemap: !production,
-            dir: "dist/firefox/content",
+            file: "dist/firefox/content.js",
             format: "esm",
         },
         plugins: [
@@ -31,9 +32,12 @@ export default defineConfig([
             }),
             resolve({ browser: true, preferBuiltins: false }),
             commonjs(),
+            cleanup({ comments: "none" }),
         ],
         watch: {
+            include: "src/content/**",
             clearScreen: true,
+            chokidar: false,
         },
     },
     {
@@ -41,7 +45,7 @@ export default defineConfig([
         input: "src/content/index.ts",
         output: {
             sourcemap: !production,
-            dir: "dist/chrome/content",
+            file: "dist/chrome/content.js",
             format: "esm",
         },
         plugins: [
@@ -55,9 +59,12 @@ export default defineConfig([
             }),
             resolve({ browser: true, preferBuiltins: false }),
             commonjs(),
+            cleanup({ comments: "none" }),
         ],
         watch: {
+            include: "src/content/**",
             clearScreen: true,
+            chokidar: false,
         },
     },
     {
@@ -65,7 +72,7 @@ export default defineConfig([
         input: "src/background/index.ts",
         output: {
             sourcemap: !production,
-            dir: "dist/firefox/background",
+            file: "dist/firefox/background.js",
             format: "esm",
         },
         plugins: [
@@ -79,6 +86,7 @@ export default defineConfig([
             }),
             resolve({ browser: true, preferBuiltins: false }),
             commonjs(),
+            cleanup({ comments: "none" }),
             copy({
                 targets: [
                     {
@@ -89,6 +97,8 @@ export default defineConfig([
             }),
         ],
         watch: {
+            chokidar: false,
+            include: "src/background/**",
             clearScreen: true,
         },
     },
@@ -97,7 +107,7 @@ export default defineConfig([
         input: "src/background/index.ts",
         output: {
             sourcemap: !production,
-            dir: "dist/chrome/background",
+            file: "dist/chrome/background.js",
             format: "esm",
         },
         plugins: [
@@ -111,6 +121,7 @@ export default defineConfig([
             }),
             resolve({ browser: true, preferBuiltins: false }),
             commonjs(),
+            cleanup({ comments: "none" }),
             copy({
                 targets: [
                     {
@@ -121,7 +132,9 @@ export default defineConfig([
             }),
         ],
         watch: {
+            include: "src/background/**",
             clearScreen: true,
+            chokidar: false,
         },
     },
     {
@@ -147,5 +160,10 @@ export default defineConfig([
                 ],
             }),
         ],
+        watch: {
+            include: ["src/manifest.*.json", "src/dummy.ts"],
+            clearScreen: true,
+            chokidar: false,
+        },
     },
 ]);

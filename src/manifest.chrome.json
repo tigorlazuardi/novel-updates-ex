@@ -4,20 +4,15 @@
     "name": "Novel Updates EX",
     "description": "Enhances the Novel Updates Website",
     "host_permissions": ["*://*.novelupdates.com/*"],
-    "browser_specific_settings": {
-        "gecko": {
-            "id": "novel-updates-ex@novel-updates-ex"
-        }
-    },
     "content_scripts": [
         {
             "matches": ["*://*.novelupdates.com/*"],
-            "js": ["content/index.js"]
+            "js": ["content.js"]
         }
     ],
     "background": {
-        "service_worker": "background/index.js",
+        "service_worker": "background.js",
         "type": "module"
     },
-    "permissions": ["storage", "tabs", "webRequest", "webRequestBlocking"]
+    "permissions": ["storage", "tabs", "webRequest"]
 }
