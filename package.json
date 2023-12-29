@@ -1,0 +1,41 @@
+{
+    "name": "novel-updates-ex",
+    "private": true,
+    "version": "1.0.0",
+    "description": "Web Extension for NovelUpdates",
+    "main": "dist/index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "prepare": "husky install",
+        "start": "rollup -c -w",
+        "build": "rollup -c"
+    },
+    "keywords": [
+        "novel-updates",
+        "web-extension",
+        "firefox",
+        "chrome"
+    ],
+    "author": "Tigor Hutasuhut <tigor.hutasuhut@gmail.com>",
+    "type": "module",
+    "license": "ISC",
+    "lint-staged": {
+        "*.{js,jsx,ts,tsx,json}": [
+            "prettier --write"
+        ]
+    },
+    "dependencies": {
+        "@rollup/plugin-commonjs": "^25.0.7",
+        "@rollup/plugin-node-resolve": "^15.2.3",
+        "@rollup/plugin-replace": "^5.0.5",
+        "@rollup/plugin-typescript": "^11.1.5",
+        "husky": "^8.0.3",
+        "lint-staged": "^15.2.0",
+        "prettier": "^3.1.1",
+        "rollup": "^4.9.1",
+        "rollup-plugin-copy": "^3.5.0",
+        "tslib": "^2.6.2",
+        "typescript": "^5.3.3",
+        "web-ext-types": "^3.2.1"
+    }
+}

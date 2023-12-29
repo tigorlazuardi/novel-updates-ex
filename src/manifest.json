@@ -1,0 +1,23 @@
+{
+    "manifest_version": 3,
+    "version": "0.0.1",
+    "name": "Novel Updates EX",
+    "description": "Enhances the Novel Updates Website",
+    "host_permissions": ["https://www.novelupdates.com/*"],
+    "browser_specific_settings": {
+        "gecko": {
+            "id": "novel-updates-ex@novel-updates-ex"
+        }
+    },
+    "content_scripts": [
+        {
+            "matches": ["https://www.novelupdates.com/*"],
+            "js": ["content/index.js"]
+        }
+    ],
+    "background": {
+        "scripts": ["background/index.js"],
+        "persistent": false,
+        "type": "module"
+    }
+}
