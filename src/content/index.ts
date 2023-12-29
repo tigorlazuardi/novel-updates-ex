@@ -1,5 +1,3 @@
-async function main() {
-    await browser.runtime.sendMessage("Content Script is Loaded");
-}
+const bgPort = browser.runtime.connect({ name: "content" });
 
-main();
+bgPort.postMessage({ message: "Hello from content script" });

@@ -1,1 +1,5 @@
-browser.runtime.onMessage.addListener((message: unknown) => {});
+browser.runtime.onConnect.addListener((client) => {
+    client.onMessage.addListener(console.log);
+});
+
+export {};

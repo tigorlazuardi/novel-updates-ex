@@ -13,11 +13,59 @@ const nodeEnv = process.env.NODE_ENV || "development";
 
 export default defineConfig([
     {
-        /* content scripts */
+        /* content scripts firefox */
         input: "src/content/index.ts",
         output: {
             sourcemap: !production,
-            dir: "dist/content",
+            dir: "dist/firefox/content",
+            format: "esm",
+        },
+        plugins: [
+            typescript(),
+            replace({
+                preventAssignment: true,
+                values: {
+                    "process.env.NODE_ENV": JSON.stringify(nodeEnv),
+                },
+                delimiters: ["", ""],
+            }),
+            resolve({ browser: true, preferBuiltins: false }),
+            commonjs(),
+        ],
+        watch: {
+            clearScreen: true,
+        },
+    },
+    {
+        /* content scripts chrome */
+        input: "src/content/index.ts",
+        output: {
+            sourcemap: !production,
+            dir: "dist/chrome/content",
+            format: "esm",
+        },
+        plugins: [
+            typescript(),
+            replace({
+                preventAssignment: true,
+                values: {
+                    "process.env.NODE_ENV": JSON.stringify(nodeEnv),
+                },
+                delimiters: ["", ""],
+            }),
+            resolve({ browser: true, preferBuiltins: false }),
+            commonjs(),
+        ],
+        watch: {
+            clearScreen: true,
+        },
+    },
+    {
+        /* background scripts firefox */
+        input: "src/background/index.ts",
+        output: {
+            sourcemap: !production,
+            dir: "dist/firefox/background",
             format: "esm",
         },
         plugins: [
@@ -34,8 +82,8 @@ export default defineConfig([
             copy({
                 targets: [
                     {
-                        src: "src/manifest.json",
-                        dest: "dist/",
+                        src: "src/background/index.html",
+                        dest: "dist/firefox/background",
                     },
                 ],
             }),
@@ -43,5 +91,61 @@ export default defineConfig([
         watch: {
             clearScreen: true,
         },
+    },
+    {
+        /* background scripts chrome */
+        input: "src/background/index.ts",
+        output: {
+            sourcemap: !production,
+            dir: "dist/chrome/background",
+            format: "esm",
+        },
+        plugins: [
+            typescript(),
+            replace({
+                preventAssignment: true,
+                values: {
+                    "process.env.NODE_ENV": JSON.stringify(nodeEnv),
+                },
+                delimiters: ["", ""],
+            }),
+            resolve({ browser: true, preferBuiltins: false }),
+            commonjs(),
+            copy({
+                targets: [
+                    {
+                        src: "src/background/index.html",
+                        dest: "dist/chrome/background",
+                    },
+                ],
+            }),
+        ],
+        watch: {
+            clearScreen: true,
+        },
+    },
+    {
+        input: "src/dummy.ts",
+        output: {
+            sourcemap: !production,
+            dir: "dist",
+            format: "esm",
+        },
+        plugins: [
+            copy({
+                targets: [
+                    {
+                        src: "src/manifest.chrome.json",
+                        dest: "dist/chrome",
+                        rename: "manifest.json",
+                    },
+                    {
+                        src: "src/manifest.firefox.json",
+                        dest: "dist/firefox",
+                        rename: "manifest.json",
+                    },
+                ],
+            }),
+        ],
     },
 ]);
