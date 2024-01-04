@@ -17,6 +17,5 @@ export function handle(_: HandlerContext) {
         data: releases,
     };
 
-    log("info", "sending release table", releases);
     browser.runtime.connect().postMessage(data);
 }

@@ -18,5 +18,11 @@
         "scripts": ["background.js"],
         "type": "module"
     },
-    "permissions": ["storage", "tabs", "webRequest", "activeTab"]
+    "permissions": [
+        "*://*.novelupdates.com/*",
+        "storage",
+        "tabs",
+        "webRequest",
+        "activeTab"
+    ]
 }
