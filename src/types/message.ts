@@ -1,37 +1,20 @@
 import { type LogLevelName } from "roarr";
+import { ReleaseTableMessage } from "../content/routes/home";
 
-export enum EventType {
-    Log,
-    HomeTable,
+export interface EventMap {
+    log: LogMessage;
+    releaseTable: ReleaseTableMessage;
 }
 
-export type JSONValue =
-    | string
-    | number
-    | boolean
-    | null
-    | JSONValue[]
-    | { [key: string]: JSONValue };
-
-export interface JSONObject {
-    [k: string]: JSONValue;
-}
-export interface JSONArray extends Array<JSONValue> {}
-
-export interface Message<E extends EventType, T = unknown> {
+export interface Message<E extends keyof EventMap, T = unknown> {
     event: E;
     data: T;
 }
 
-export type LogMessage = Message<
-    EventType.Log,
-    {
-        level: LogLevelName;
-        message: string;
-        context?: JSONObject;
-    }
->;
+export type Log = {
+    level: LogLevelName;
+    message: string;
+    context?: unknown;
+};
 
-export function isLogMessage(message: any): message is LogMessage {
-    return message.event === EventType.Log;
-}
+export type LogMessage = Message<"log", Log>;

@@ -1,14 +1,14 @@
-import { EventType, JSONObject, LogMessage } from "../types/message";
+import { LogMessage } from "../types/message";
 import browser from "webextension-polyfill";
 import { type LogLevelName } from "roarr";
 
-export function log(
+export function log<T = unknown>(
     level: LogLevelName,
     message: string,
-    context?: JSONObject,
+    context?: T,
 ) {
     const data: LogMessage = {
-        event: EventType.Log,
+        event: "log",
         data: {
             level,
             message,

@@ -1,6 +1,7 @@
 import { log } from "../log";
+import * as HomeHandler from "./home";
 
-type HandlerContext = {
+export type HandlerContext = {
     path: string;
     handler: Handler;
     match: RegExpMatchArray | null;
@@ -35,6 +36,8 @@ class Handler {
 }
 
 export const handler = new Handler();
+
+handler.register("/", HomeHandler.handle);
 
 export function handle() {
     handler.handle(window.location.pathname);

@@ -1,14 +1,9 @@
 import { LogLevelName, ROARR, Roarr } from "roarr";
-import { JSONObject } from "../../types/message";
 import { writer } from "./writer";
 
 ROARR.write = writer;
 
-export function log(
-    level: LogLevelName,
-    message: string,
-    context?: JSONObject,
-) {
+export function log(level: LogLevelName, message: string, context?: any) {
     switch (level) {
         case "debug":
             if (context) Roarr.info(context, message);
