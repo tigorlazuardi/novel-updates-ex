@@ -1,5 +1,5 @@
 import { log } from "./log";
-import "./events";
+import "./handlers";
 
 log("info", "Background Script Loaded");
 

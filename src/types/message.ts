@@ -3,7 +3,7 @@ import { ReleaseTableMessage } from "../content/routes/home";
 
 export interface EventMap {
     log: LogMessage;
-    releaseTable: ReleaseTableMessage;
+    ["home::release-table"]: ReleaseTableMessage;
 }
 
 export interface Message<E extends keyof EventMap, T = unknown> {

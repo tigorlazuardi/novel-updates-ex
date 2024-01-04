@@ -1,6 +1,6 @@
 import browser from "webextension-polyfill";
-import { EventMap } from "../../types/message";
-import { log } from "../log";
+import { EventMap } from "../types/message";
+import { log } from "./log";
 
 export class EventHandler {
     private handlers: Map<keyof EventMap, ((message: any) => void)[]> =
@@ -79,8 +79,8 @@ export class EventHandler {
     }
 }
 
-export const eventHandler = new EventHandler();
+export const bgEvent = new EventHandler();
 
-eventHandler.on("log", (message) => {
+bgEvent.on("log", (message) => {
     log(message.data.level, message.data.message, message.data.context);
 });

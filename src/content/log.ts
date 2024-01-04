@@ -1,6 +1,7 @@
 import { LogMessage } from "../types/message";
 import browser from "webextension-polyfill";
 import { type LogLevelName } from "roarr";
+import { contentEvent } from "./events";
 
 export function log<T = unknown>(
     level: LogLevelName,
@@ -15,5 +16,5 @@ export function log<T = unknown>(
             context,
         },
     };
-    browser.runtime.connect().postMessage(data);
+    contentEvent.emit(data);
 }
