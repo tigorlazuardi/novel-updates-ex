@@ -35,9 +35,10 @@ export default defineConfig([
             cleanup({ comments: "none" }),
         ],
         watch: {
-            include: "src/content/**",
             clearScreen: true,
-            chokidar: false,
+            chokidar: {
+                usePolling: true,
+            },
         },
     },
     {
@@ -62,9 +63,10 @@ export default defineConfig([
             cleanup({ comments: "none" }),
         ],
         watch: {
-            include: "src/content/**",
             clearScreen: true,
-            chokidar: false,
+            chokidar: {
+                usePolling: true,
+            },
         },
     },
     {
@@ -97,8 +99,9 @@ export default defineConfig([
             }),
         ],
         watch: {
-            chokidar: false,
-            include: "src/background/**",
+            chokidar: {
+                usePolling: true,
+            },
             clearScreen: true,
         },
     },
@@ -132,9 +135,10 @@ export default defineConfig([
             }),
         ],
         watch: {
-            include: "src/background/**",
             clearScreen: true,
-            chokidar: false,
+            chokidar: {
+                usePolling: true,
+            },
         },
     },
     {
@@ -163,7 +167,9 @@ export default defineConfig([
         watch: {
             include: ["src/manifest.*.json", "src/dummy.ts"],
             clearScreen: true,
-            chokidar: false,
+            chokidar: {
+                usePolling: true,
+            },
         },
     },
 ]);
