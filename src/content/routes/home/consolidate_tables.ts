@@ -90,6 +90,7 @@ export function consolidateTable(root: Element) {
                 groupLink.href = item.url;
                 groupLink.title = item.name;
                 groupLink.textContent = item.name;
+                groupLink.style.fontWeight = "bold";
                 div.appendChild(groupLink);
 
                 for (const chapter of item.chapters) {
