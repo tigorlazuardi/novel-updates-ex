@@ -3,13 +3,14 @@ export type Origin = "[KR]" | "[CN]" | "[JP]";
 export type Entry = {
     // origin is only available if the user enables the "show origin" option
     origin?: Origin;
+    index: number;
     title: {
         name: string;
         url: string;
     };
     chapter: {
         name: string;
-        url: string;
+        url?: string;
     };
     group: {
         name: string;
@@ -19,6 +20,7 @@ export type Entry = {
 
 export type ReleaseTable = {
     date: string;
+    index: number;
     entries: Entry[];
 };
 
@@ -27,10 +29,12 @@ export function extractReleaseTable(root: Element): ReleaseTable[] {
 
     const tables = root.querySelectorAll<HTMLTableElement>("table.tablesorter");
 
+    let tableIndex = 0;
     for (const table of tables) {
         const date = table.previousElementSibling?.textContent?.trim() ?? "";
         const rows = table.querySelectorAll<HTMLTableRowElement>("tbody > tr");
         const entries: Entry[] = [];
+        let index = 0;
         for (const row of rows) {
             const [titleColumn, releaseColumn, groupColumn] = row.children;
 
@@ -44,20 +48,30 @@ export function extractReleaseTable(root: Element): ReleaseTable[] {
                 url: titleContent.href,
             };
 
-            const chapterContent = releaseColumn.querySelector("a")!;
-            const chapter = {
-                name: chapterContent.title,
-                url: chapterContent.href,
+            const chapter: { name: string; url?: string } = {
+                name: "",
             };
+
+            // chapterContent 'a' element can be null when user is not logged in.
+            const chapterContent = releaseColumn.querySelector("a")!;
+            if (chapterContent) {
+                chapter.name = chapterContent.title;
+                chapter.url = chapterContent.href;
+            } else {
+                const chapterSpan = releaseColumn.querySelector("span")!;
+                chapter.name = chapterSpan.textContent!.trim();
+            }
 
             const groupContent = groupColumn.querySelector("a")!;
             const group = {
                 name: groupContent.title,
                 url: groupContent.href,
             };
-            entries.push({ origin, title, chapter, group });
+            entries.push({ index, origin, title, chapter, group });
+            index++;
         }
-        out.push({ date, entries });
+        out.push({ index: tableIndex, date, entries });
+        tableIndex++;
     }
 
     return out;

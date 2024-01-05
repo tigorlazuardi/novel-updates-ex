@@ -69,13 +69,9 @@ export class EventHandler {
             active: true,
             currentWindow: true,
         });
-        if (!tab.id) {
-            return;
+        if (tab && tab.id && tab.url?.includes(".novelupdates.com")) {
+            browser.tabs.sendMessage(tab.id, message);
         }
-        if (!tab.url?.includes(".novelupdates.com")) {
-            return;
-        }
-        browser.tabs.sendMessage(tab.id, message);
     }
 }
 

@@ -6,8 +6,8 @@ ROARR.write = writer;
 export function log(level: LogLevelName, message: string, context?: any) {
     switch (level) {
         case "debug":
-            if (context) Roarr.info(context, message);
-            else Roarr.info(message);
+            if (context) Roarr.debug(context, message);
+            else Roarr.debug(message);
             break;
         case "info":
             if (context) Roarr.info(context, message);

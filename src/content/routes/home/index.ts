@@ -1,8 +1,8 @@
 import { HandlerContext } from "..";
 import { Message } from "../../../types/message";
-import { log } from "../../log";
+import { contentEvent } from "../../events";
 import { type ReleaseTable, extractReleaseTable } from "./extract_tables";
-import browser from "webextension-polyfill";
+import "./augment_tables";
 
 export type ReleaseTableMessage = Message<
     "home::release-table",
@@ -10,6 +10,12 @@ export type ReleaseTableMessage = Message<
 >;
 
 export function handle(_: HandlerContext) {
+    const content = document.querySelector(
+        ".l-submain-h",
+    ) as HTMLElement | null;
+    if (content) {
+        content.style.maxWidth = "100vw";
+    }
     const releases = extractReleaseTable(document.body);
 
     const data: ReleaseTableMessage = {
@@ -17,5 +23,5 @@ export function handle(_: HandlerContext) {
         data: releases,
     };
 
-    browser.runtime.connect().postMessage(data);
+    contentEvent.emit(data);
 }
