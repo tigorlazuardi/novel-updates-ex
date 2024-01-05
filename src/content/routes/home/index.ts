@@ -3,6 +3,7 @@ import { Message } from "../../../types/message";
 import { contentEvent } from "../../events";
 import { type ReleaseTable, extractReleaseTable } from "./extract_tables";
 import "./augment_tables";
+import { consolidateTable } from "./consolidate_tables";
 
 export type ReleaseTableMessage = Message<
     "home::release-table::fetch-details::request",
@@ -16,6 +17,9 @@ export function handle(_: HandlerContext) {
     if (content) {
         content.style.maxWidth = "100vw";
     }
+
+    consolidateTable(document.body);
+
     const releases = extractReleaseTable(document.body);
 
     const data: ReleaseTableMessage = {

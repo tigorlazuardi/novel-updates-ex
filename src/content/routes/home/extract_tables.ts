@@ -53,14 +53,16 @@ export function extractReleaseTable(root: Element): ReleaseTable[] {
             };
 
             // chapterContent 'a' element can be null when user is not logged in.
-            const chapterContent = releaseColumn.querySelector("a")!;
-            if (chapterContent) {
-                chapter.name = chapterContent.title;
-                chapter.url = chapterContent.href;
-            } else {
-                const chapterSpan = releaseColumn.querySelector("span")!;
-                chapter.name = chapterSpan.textContent!.trim();
-            }
+            // const chapterContent = releaseColumn.querySelector(
+            //     "a.chp-release",
+            // ) as HTMLAnchorElement | null;
+            // if (chapterContent) {
+            //     chapter.name = chapterContent.title;
+            //     chapter.url = chapterContent.href;
+            // } else {
+            //     const chapterSpan = releaseColumn.querySelector("span")!;
+            //     chapter.name = chapterSpan.textContent!.trim();
+            // }
 
             const groupContent = groupColumn.querySelector("a")!;
             const group = {
