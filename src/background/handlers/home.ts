@@ -5,6 +5,7 @@ import { selectOne, selectAll } from "css-select";
 import { log } from "../log";
 import { Message } from "../../types/message";
 import { type Entry } from "../../content/routes/home/extract_tables";
+import browser from "webextension-polyfill";
 
 type ReleaseTableImageFetchPayload = {
     index: {
@@ -17,37 +18,81 @@ type ReleaseTableImageFetchPayload = {
 };
 
 export type ReleaseTableImageFetchMessage = Message<
-    "home::release-table::cover-image",
+    "home::release-table::fetch-details::response",
     ReleaseTableImageFetchPayload
 >;
 
-bgEvent.on("home::release-table", (message) => {
+const cacheKey = "release-table::fetch-details";
+
+type CacheItem = {
+    image: string;
+    description: string[];
+};
+
+type CacheResult = {
+    [key: string]: {
+        [cacheKey]?: CacheItem;
+    };
+};
+
+bgEvent.on("home::release-table::fetch-details::request", (message) => {
     for (const table of message.data) {
         for (const entry of table.entries) {
             const url = entry.title.url;
-            fetch(url, { credentials: "include" })
-                .then((resp) => resp.text())
-                .then((text) => {
-                    const dom = parseDocument(text);
-                    const image = extractImageCover(dom);
-                    const description = extractDescription(dom);
-                    const payload: ReleaseTableImageFetchPayload = {
-                        index: {
-                            table: table.index,
-                            entry: entry.index,
-                        },
-                        entry,
-                        image,
-                        description,
-                    };
-                    bgEvent.emit({
-                        event: "home::release-table::cover-image",
-                        data: payload,
+            browser.storage.local.get(url).then((result: CacheResult) => {
+                const store = result[url];
+                if (store) {
+                    const cache = store[cacheKey];
+                    if (cache && cache.image && cache.description) {
+                        const payload: ReleaseTableImageFetchPayload = {
+                            index: {
+                                table: table.index,
+                                entry: entry.index,
+                            },
+                            entry,
+                            image: cache.image,
+                            description: cache.description,
+                        };
+                        bgEvent.emit({
+                            event: "home::release-table::fetch-details::response",
+                            data: payload,
+                        });
+                        return;
+                    }
+                }
+                fetch(url, { credentials: "include" })
+                    .then((resp) => resp.text())
+                    .then((text) => {
+                        const dom = parseDocument(text);
+                        const image = extractImageCover(dom);
+                        const description = extractDescription(dom);
+                        const payload: ReleaseTableImageFetchPayload = {
+                            index: {
+                                table: table.index,
+                                entry: entry.index,
+                            },
+                            entry,
+                            image,
+                            description,
+                        };
+                        bgEvent.emit({
+                            event: "home::release-table::fetch-details::response",
+                            data: payload,
+                        });
+
+                        return browser.storage.local.set({
+                            [url]: {
+                                [cacheKey]: {
+                                    image,
+                                    description,
+                                },
+                            },
+                        });
+                    })
+                    .catch((err) => {
+                        log("error", "failed to fetch image", err);
                     });
-                })
-                .catch((err) => {
-                    log("error", "failed to fetch image", err);
-                });
+            });
         }
     }
 });

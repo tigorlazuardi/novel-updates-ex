@@ -5,7 +5,7 @@ import { type ReleaseTable, extractReleaseTable } from "./extract_tables";
 import "./augment_tables";
 
 export type ReleaseTableMessage = Message<
-    "home::release-table",
+    "home::release-table::fetch-details::request",
     ReleaseTable[]
 >;
 
@@ -19,7 +19,7 @@ export function handle(_: HandlerContext) {
     const releases = extractReleaseTable(document.body);
 
     const data: ReleaseTableMessage = {
-        event: "home::release-table",
+        event: "home::release-table::fetch-details::request",
         data: releases,
     };
 

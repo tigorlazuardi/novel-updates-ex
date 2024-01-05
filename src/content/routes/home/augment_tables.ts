@@ -2,7 +2,7 @@ import { ReleaseTableImageFetchMessage } from "../../../background/handlers/home
 import { contentEvent } from "../../events";
 import { log } from "../../log";
 
-contentEvent.on("home::release-table::cover-image", (message) => {
+contentEvent.on("home::release-table::fetch-details::response", (message) => {
     const tables =
         document.body.querySelectorAll<HTMLTableElement>("table.tablesorter");
 
@@ -30,7 +30,7 @@ function addCoverToRow(row: Element, message: ReleaseTableImageFetchMessage) {
 
     const img = document.createElement("img");
     img.src = message.data.image ?? "";
-    img.alt = "cover";
+    img.alt = message.data.entry.title.name;
     img.width = 200;
     img.height = 200;
     img.style.paddingTop = "10px";
@@ -55,10 +55,9 @@ function addDescriptionToRow(
     const titleCell = row.children[1];
 
     const descriptionContainer = document.createElement("div");
-    descriptionContainer.style.marginTop = "8";
-    descriptionContainer.style.marginBottom = "8";
-    descriptionContainer.style.paddingLeft = "4";
-    descriptionContainer.style.paddingRight = "4";
+    descriptionContainer.style.marginTop = "8px";
+    descriptionContainer.style.marginBottom = "8px";
+    descriptionContainer.style.paddingRight = "8px";
 
     const hideThreshold = 2;
     let i = 0;

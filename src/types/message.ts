@@ -4,8 +4,8 @@ import { ReleaseTableImageFetchMessage } from "../background/handlers/home";
 
 export interface EventMap {
     log: LogMessage;
-    ["home::release-table"]: ReleaseTableMessage;
-    ["home::release-table::cover-image"]: ReleaseTableImageFetchMessage;
+    ["home::release-table::fetch-details::request"]: ReleaseTableMessage;
+    ["home::release-table::fetch-details::response"]: ReleaseTableImageFetchMessage;
 }
 
 export interface Message<E extends keyof EventMap, T = unknown> {
