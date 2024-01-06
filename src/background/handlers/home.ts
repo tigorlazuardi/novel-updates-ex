@@ -8,7 +8,7 @@ import {
     type Origin,
     type Entry,
 } from "../../content/routes/home/extract_tables";
-import cache from "../../cache";
+import store from "../../store";
 
 type ReleaseTableDetailResponse = {
     index: {
@@ -43,7 +43,7 @@ bgEvent.on("home::release-table::fetch-details::request", (message) => {
     for (const table of message.data) {
         for (const entry of table.entries) {
             const url = entry.title.url;
-            cache
+            store
                 .getNamespaced(url, "home::release-table::fetch-details")
                 .then((result) => {
                     if (result) {
@@ -88,7 +88,7 @@ bgEvent.on("home::release-table::fetch-details::request", (message) => {
                                 data: payload,
                             });
 
-                            return cache.setNamespaced(
+                            return store.setNamespaced(
                                 url,
                                 "home::release-table::fetch-details",
                                 {

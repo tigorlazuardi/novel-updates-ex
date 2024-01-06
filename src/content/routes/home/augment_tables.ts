@@ -1,4 +1,5 @@
 import { ReleaseTableImageFetchMessage } from "../../../background/handlers/home";
+import store from "../../../store";
 import { contentEvent } from "../../events";
 import { log } from "../../log";
 
@@ -143,70 +144,72 @@ function addDescriptionToRow(
     row: Element,
     message: ReleaseTableImageFetchMessage,
 ) {
-    const titleCell = row.children[1];
+    store.config().then((config) => {
+        const titleCell = row.children[1];
 
-    const descriptionContainer = document.createElement("div");
-    descriptionContainer.style.marginTop = "8px";
-    descriptionContainer.style.marginBottom = "8px";
-    descriptionContainer.style.paddingRight = "8px";
+        const descriptionContainer = document.createElement("div");
+        descriptionContainer.style.marginTop = "8px";
+        descriptionContainer.style.marginBottom = "8px";
+        descriptionContainer.style.paddingRight = "8px";
 
-    const hideThreshold = 2;
-    let i = 0;
-    for (const desc of message.data.description) {
-        const p = document.createElement("p");
-        p.textContent = desc;
-        p.style.fontSize = "small";
-        p.style.marginTop = "8";
-        p.style.marginBottom = "8";
-        p.style.paddingTop = "0";
-        p.style.paddingBottom = "0";
-        p.style.textAlign = "justify";
-        p.style.color = "#999";
+        const hideThreshold = config.home.description.paragraph_threshold;
+        let i = 0;
+        for (const desc of message.data.description) {
+            const p = document.createElement("p");
+            p.textContent = desc;
+            p.style.fontSize = "small";
+            p.style.marginTop = "8";
+            p.style.marginBottom = "8";
+            p.style.paddingTop = "0";
+            p.style.paddingBottom = "0";
+            p.style.textAlign = "justify";
+            p.style.color = "#999";
 
-        if (i >= hideThreshold) {
-            p.style.display = "none";
-        }
-
-        descriptionContainer.appendChild(p);
-        i++;
-    }
-    titleCell.appendChild(descriptionContainer);
-
-    if (i > hideThreshold) {
-        const showMore = document.createElement("a");
-        showMore.href = "#";
-        showMore.textContent = "Show More";
-        showMore.style.fontSize = "small";
-        showMore.style.marginTop = "8px";
-        showMore.style.paddingBottom = "8px";
-        showMore.style.textAlign = "center";
-        showMore.style.color = "blue";
-        showMore.style.textDecorationLine = "underline";
-
-        let show = false;
-
-        showMore.addEventListener("click", (e) => {
-            e.preventDefault();
-            if (show) {
-                let j = 0;
-                for (const p of descriptionContainer.children) {
-                    if (j >= hideThreshold) {
-                        (p as HTMLElement).style.display = "none";
-                    }
-                    j++;
-                }
-                showMore.textContent = "Show More";
-            } else {
-                for (const p of descriptionContainer.children) {
-                    (p as HTMLElement).style.display = "block";
-                }
-                showMore.textContent = "Show Less";
+            if (i >= hideThreshold) {
+                p.style.display = "none";
             }
-            show = !show;
-        });
 
-        titleCell.appendChild(showMore);
-    }
+            descriptionContainer.appendChild(p);
+            i++;
+        }
+        titleCell.appendChild(descriptionContainer);
+
+        if (i > hideThreshold) {
+            const showMore = document.createElement("a");
+            showMore.href = "#";
+            showMore.textContent = "Show More";
+            showMore.style.fontSize = "small";
+            showMore.style.marginTop = "8px";
+            showMore.style.paddingBottom = "8px";
+            showMore.style.textAlign = "center";
+            showMore.style.color = "blue";
+            showMore.style.textDecorationLine = "underline";
+
+            let show = false;
+
+            showMore.addEventListener("click", (e) => {
+                e.preventDefault();
+                if (show) {
+                    let j = 0;
+                    for (const p of descriptionContainer.children) {
+                        if (j >= hideThreshold) {
+                            (p as HTMLElement).style.display = "none";
+                        }
+                        j++;
+                    }
+                    showMore.textContent = "Show More";
+                } else {
+                    for (const p of descriptionContainer.children) {
+                        (p as HTMLElement).style.display = "block";
+                    }
+                    showMore.textContent = "Show Less";
+                }
+                show = !show;
+            });
+
+            titleCell.appendChild(showMore);
+        }
+    });
 }
 
 function augmentTable(table: HTMLTableElement) {
