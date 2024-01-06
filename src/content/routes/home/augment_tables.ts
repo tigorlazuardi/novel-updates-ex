@@ -15,7 +15,7 @@ contentEvent.on("home::release-table::fetch-details::response", (message) => {
     augmentTable(table);
 
     const rows = table.querySelectorAll("tbody>tr");
-    const row = rows[message.data.index.entry];
+    const row = rows[message.data.index.entry] as HTMLTableRowElement;
     if (!row) {
         log("warn", `row index ${message.data.index.entry} not found`);
         return;
@@ -29,11 +29,21 @@ contentEvent.on("home::release-table::fetch-details::response", (message) => {
     const divImg = document.createElement("div");
     divImg.classList.add("ex:image-cover");
     addCoverToElement(message, divImg);
+    addCoverURLAttributeToElement(message, row);
     coverCell.appendChild(divImg);
 
-    const divRating = document.createElement("div");
-    addRatingToElement(message, divRating);
-    coverCell.appendChild(divRating);
+    addRatingAttributeToElement(message, row);
+    const divOriginRating = document.createElement("div");
+    divOriginRating.style.display = "flex";
+    divOriginRating.style.placeContent = "center";
+    divOriginRating.style.flexWrap = "nowrap";
+    divOriginRating.style.gap = "8px";
+    addOriginToElement(message, divOriginRating);
+    addOriginAttributeToElement(message, row);
+
+    addRatingToElement(message, divOriginRating);
+
+    coverCell.appendChild(divOriginRating);
 
     addDescriptionToRow(row, message);
 });
@@ -52,7 +62,6 @@ function addCoverToElement(
     img.style.marginLeft = "auto";
     img.style.marginRight = "auto";
     img.style.borderRadius = "7.5%";
-    target.setAttribute("data-url", message.data.image ?? "");
 
     const a = document.createElement("a");
     a.href = message.data.entry.title.url;
@@ -61,12 +70,20 @@ function addCoverToElement(
     target.appendChild(a);
 }
 
+function addCoverURLAttributeToElement(
+    message: ReleaseTableImageFetchMessage,
+    target: Element,
+) {
+    target.setAttribute("data-image-url", message.data.image ?? "");
+}
+
 function addRatingToElement(
     message: ReleaseTableImageFetchMessage,
     target: Element,
 ) {
-    const h6 = document.createElement("h6");
-    h6.style.textAlign = "center";
+    const p = document.createElement("p");
+    p.style.textAlign = "center";
+    p.style.fontSize = "1.10rem";
 
     let color = "green";
     if (message.data.rating.rating < 4) {
@@ -79,12 +96,47 @@ function addRatingToElement(
         color = "red";
     }
 
-    h6.innerHTML = `<b style="color: ${color};">${message.data.rating.rating}</b> / 5.0, <b>${message.data.rating.votes}</b> votes`;
+    p.innerHTML = `<b style="color: ${color};">${message.data.rating.rating}</b> / 5.0, <b>${message.data.rating.votes}</b> votes`;
 
     target.classList.add("ex:novel-rating");
+    target.appendChild(p);
+}
+
+function addRatingAttributeToElement(
+    message: ReleaseTableImageFetchMessage,
+    target: Element,
+) {
     target.setAttribute("data-rating", message.data.rating.rating.toString());
     target.setAttribute("data-votes", message.data.rating.votes.toString());
-    target.appendChild(h6);
+}
+
+function addOriginToElement(
+    message: ReleaseTableImageFetchMessage,
+    target: Element,
+) {
+    const span = document.createElement("span");
+    switch (message.data.origin) {
+        case "[JP]":
+            span.classList.add("orgjp");
+            break;
+        case "[KR]":
+            span.classList.add("orgkr");
+            break;
+        case "[CN]":
+            span.classList.add("orgcn");
+            break;
+    }
+    span.textContent = message.data.origin;
+    span.style.textAlign = "center";
+    span.style.fontWeight = "bold";
+    target.appendChild(span);
+}
+
+function addOriginAttributeToElement(
+    message: ReleaseTableImageFetchMessage,
+    target: Element,
+) {
+    target.setAttribute("data-origin", message.data.origin);
 }
 
 function addDescriptionToRow(
