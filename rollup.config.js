@@ -161,6 +161,14 @@ export default defineConfig([
                         dest: "dist/firefox",
                         rename: "manifest.json",
                     },
+                    {
+                        src: "src/assets",
+                        dest: "dist/firefox",
+                    },
+                    {
+                        src: "src/assets",
+                        dest: "dist/chrome",
+                    },
                 ],
             }),
         ],

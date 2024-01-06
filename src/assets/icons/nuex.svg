@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="99.999992mm"
+   height="100mm"
+   viewBox="0 0 100 100"
+   version="1.1"
+   id="svg1"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1" />
+  <g
+     id="layer1"
+     transform="translate(-20,-36.599399)">
+    <rect
+       style="fill:#000080;stroke-width:0.264397"
+       id="rect2"
+       width="100"
+       height="100"
+       x="20"
+       y="36.599396"
+       ry="16.185984" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:53.581px;font-family:'JetBrains Mono';-inkscape-font-specification:'JetBrains Mono, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#ffffff;fill-opacity:1;stroke-width:4.46508"
+       x="20.961451"
+       y="108.51751"
+       id="text1"
+       transform="scale(1.3180179,0.75871506)"><tspan
+         id="tspan1"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:53.581px;font-family:'JetBrains Mono';-inkscape-font-specification:'JetBrains Mono, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#ffffff;fill-opacity:1;stroke-width:4.46508"
+         x="20.961451"
+         y="108.51751">NU</tspan><tspan
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:53.581px;font-family:'JetBrains Mono';-inkscape-font-specification:'JetBrains Mono, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#ffffff;fill-opacity:1;stroke-width:4.46508"
+         x="20.961451"
+         y="175.49376"
+         id="tspan2" /></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:53.5772px;font-family:'JetBrains Mono';-inkscape-font-specification:'JetBrains Mono, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#ffffff;fill-opacity:1;stroke-width:0.247381"
+       x="20.087858"
+       y="156.9371"
+       id="text3"
+       transform="scale(1.3001122,0.76916438)"><tspan
+         id="tspan3"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:53.5772px;font-family:'JetBrains Mono';-inkscape-font-specification:'JetBrains Mono, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.247381"
+         x="20.087858"
+         y="156.9371">EX</tspan></text>
+  </g>
+</svg>

@@ -24,7 +24,7 @@ export type Entry = {
 };
 
 export type ReleaseTable = {
-    date: string;
+    name: string;
     index: number;
     entries: Entry[];
 };
@@ -85,7 +85,7 @@ export function extractReleaseTable(root: Element): ReleaseTable[] {
             entries.push({ index, origin, title, release });
             index++;
         }
-        out.push({ index: tableIndex, date, entries });
+        out.push({ index: tableIndex, name: date, entries });
         tableIndex++;
     }
 
