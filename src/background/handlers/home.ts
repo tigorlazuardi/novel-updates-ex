@@ -8,7 +8,7 @@ import {
     type Origin,
     type Entry,
 } from "../../content/routes/home/extract_tables";
-import browser from "webextension-polyfill";
+import cache from "../../cache";
 
 type ReleaseTableDetailResponse = {
     index: {
@@ -32,40 +32,31 @@ export type ReleaseTableImageFetchMessage = Message<
     ReleaseTableDetailResponse
 >;
 
-const cacheKey = "release-table::fetch-details";
-
-type CacheItem = {
+export type ReleaseDetail = {
     image: string;
     description: string[];
     origin: Origin;
     rating: Rating;
 };
 
-type CacheResult = {
-    [key: string]: {
-        [cacheKey]?: CacheItem;
-    };
-};
-
 bgEvent.on("home::release-table::fetch-details::request", (message) => {
     for (const table of message.data) {
         for (const entry of table.entries) {
             const url = entry.title.url;
-            browser.storage.local.get(url).then((result: CacheResult) => {
-                const store = result[url];
-                if (store) {
-                    const cache = store[cacheKey];
-                    if (cache) {
+            cache
+                .getNamespaced(url, "home::release-table::fetch-details")
+                .then((result) => {
+                    if (result) {
                         const payload: ReleaseTableDetailResponse = {
                             index: {
                                 table: table.index,
                                 entry: entry.index,
                             },
                             entry,
-                            image: cache.image,
-                            description: cache.description,
-                            origin: cache.origin,
-                            rating: cache.rating,
+                            image: result.image,
+                            description: result.description,
+                            origin: result.origin,
+                            rating: result.rating,
                         };
                         bgEvent.emit({
                             event: "home::release-table::fetch-details::response",
@@ -73,48 +64,45 @@ bgEvent.on("home::release-table::fetch-details::request", (message) => {
                         });
                         return;
                     }
-                }
-                return fetch(url, { credentials: "include" })
-                    .then((resp) => resp.text())
-                    .then((text) => {
-                        const dom = parseDocument(text);
-                        const image = extractImageCover(dom);
-                        const description = extractDescription(dom);
-                        const origin = extractOrigin(dom);
-                        const rating = extractRating(dom);
-                        const payload: ReleaseTableDetailResponse = {
-                            index: {
-                                table: table.index,
-                                entry: entry.index,
-                            },
-                            entry,
-                            image,
-                            description,
-                            origin,
-                            rating,
-                        };
-                        bgEvent.emit({
-                            event: "home::release-table::fetch-details::response",
-                            data: payload,
-                        });
+                    return fetch(url, { credentials: "include" })
+                        .then((resp) => resp.text())
+                        .then((text) => {
+                            const dom = parseDocument(text);
+                            const image = extractImageCover(dom);
+                            const description = extractDescription(dom);
+                            const origin = extractOrigin(dom);
+                            const rating = extractRating(dom);
+                            const payload: ReleaseTableDetailResponse = {
+                                index: {
+                                    table: table.index,
+                                    entry: entry.index,
+                                },
+                                entry,
+                                image,
+                                description,
+                                origin,
+                                rating,
+                            };
+                            bgEvent.emit({
+                                event: "home::release-table::fetch-details::response",
+                                data: payload,
+                            });
 
-                        const cache: CacheResult = {
-                            [url]: {
-                                [cacheKey]: {
+                            return cache.setNamespaced(
+                                url,
+                                "home::release-table::fetch-details",
+                                {
                                     image,
                                     description,
                                     origin,
                                     rating,
                                 },
-                            },
-                        };
-
-                        return browser.storage.local.set(cache);
-                    })
-                    .catch((err) => {
-                        log("error", "failed to fetch image", err);
-                    });
-            });
+                            );
+                        })
+                        .catch((err) => {
+                            log("error", "failed to fetch image", err);
+                        });
+                });
         }
     }
 });

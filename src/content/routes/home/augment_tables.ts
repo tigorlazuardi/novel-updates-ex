@@ -25,7 +25,6 @@ contentEvent.on("home::release-table::fetch-details::response", (message) => {
     coverCell.style.display = "flex";
     coverCell.style.flexDirection = "column";
     coverCell.style.alignContent = "center";
-    // coverCell.style.justifyContent = "center";
 
     const divImg = document.createElement("div");
     divImg.classList.add("ex:image-cover");
