@@ -111,6 +111,7 @@ export function consolidateTable(root: Element) {
 
                 const item = releaseGroup[title];
                 item.group.style.fontWeight = "bold";
+                item.group.classList.add("ex:group-link");
                 div.appendChild(item.group);
 
                 for (const chapter of item.chapters) {

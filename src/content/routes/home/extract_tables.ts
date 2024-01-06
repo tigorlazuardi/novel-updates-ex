@@ -77,6 +77,11 @@ export function extractReleaseTable(root: Element): ReleaseTable[] {
 
             const release: ReleaseItem[] = [];
 
+            for (const releaseElements of releaseColumn.querySelectorAll(
+                "div",
+            )) {
+            }
+
             entries.push({ index, origin, title, release });
             index++;
         }
