@@ -121,7 +121,7 @@ function addDescriptionToRow(
 function augmentTable(table: HTMLTableElement) {
     const headerRow = table.querySelector("thead>tr")!;
     const headers = headerRow.querySelectorAll("tr>th");
-    if (headers.length > 3) {
+    if (headers.length > 2) {
         return;
     }
 

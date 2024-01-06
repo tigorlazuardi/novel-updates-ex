@@ -1,5 +1,17 @@
 export type Origin = "[KR]" | "[CN]" | "[JP]";
 
+type ReleaseItem = {
+    group: {
+        name: string;
+        url: string;
+    };
+    chapters: {
+        name: string;
+        url?: string;
+        nuf_link?: string;
+    };
+};
+
 export type Entry = {
     // origin is only available if the user enables the "show origin" option
     origin?: Origin;
@@ -8,14 +20,7 @@ export type Entry = {
         name: string;
         url: string;
     };
-    chapter: {
-        name: string;
-        url?: string;
-    };
-    group: {
-        name: string;
-        url: string;
-    };
+    release: ReleaseItem[];
 };
 
 export type ReleaseTable = {
@@ -36,7 +41,7 @@ export function extractReleaseTable(root: Element): ReleaseTable[] {
         const entries: Entry[] = [];
         let index = 0;
         for (const row of rows) {
-            const [titleColumn, releaseColumn, groupColumn] = row.children;
+            const [titleColumn, releaseColumn] = row.children;
 
             const origin = (titleColumn
                 .querySelector("span")
@@ -46,10 +51,6 @@ export function extractReleaseTable(root: Element): ReleaseTable[] {
             const title = {
                 name: titleContent.title,
                 url: titleContent.href,
-            };
-
-            const chapter: { name: string; url?: string } = {
-                name: "",
             };
 
             // chapterContent 'a' element can be null when user is not logged in.
@@ -64,12 +65,19 @@ export function extractReleaseTable(root: Element): ReleaseTable[] {
             //     chapter.name = chapterSpan.textContent!.trim();
             // }
 
-            const groupContent = groupColumn.querySelector("a")!;
-            const group = {
-                name: groupContent.title,
-                url: groupContent.href,
-            };
-            entries.push({ index, origin, title, chapter, group });
+            // const groupContent = groupColumn.querySelector("a")!;
+            // const group = {
+            //     name: groupContent.title,
+            //     url: groupContent.href,
+            // };
+            // const group = {
+            //     name: "",
+            //     url: "",
+            // };
+
+            const release: ReleaseItem[] = [];
+
+            entries.push({ index, origin, title, release });
             index++;
         }
         out.push({ index: tableIndex, date, entries });

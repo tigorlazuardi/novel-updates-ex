@@ -1,11 +1,9 @@
-import { log } from "../../log";
-
 type ReleaseItem = {
-    name: string;
-    url: string;
+    group: HTMLAnchorElement;
     chapters: {
-        name: string;
-        url?: string;
+        chapter: HTMLAnchorElement | HTMLSpanElement;
+        nuf_element: Element | null;
+        check_box: Element[];
     }[];
 };
 
@@ -25,20 +23,39 @@ export function consolidateTable(root: Element) {
         for (const row of rows) {
             const [titleColumn, releaseColumn, groupColumn] = row.children;
             const releaseTitle = titleColumn.querySelector("a")!.title;
-            const { title: titleGroup, href: hrefGroup } =
-                groupColumn.querySelector("a")!;
-            let chapterName = "";
-            let chapterUrl: string | undefined = undefined;
-
+            const groupELement = groupColumn
+                .querySelector("a")!
+                .cloneNode(true) as HTMLAnchorElement;
+            let chapterElement: HTMLAnchorElement | HTMLSpanElement;
             const chapterContent = releaseColumn.querySelector(
                 "a.chp-release",
             ) as HTMLAnchorElement | null;
             if (chapterContent) {
-                chapterName = chapterContent.title;
-                chapterUrl = chapterContent.href;
+                chapterElement = chapterContent.cloneNode(
+                    true,
+                ) as HTMLAnchorElement;
             } else {
-                const chapterSpan = releaseColumn.querySelector("span")!;
-                chapterName = chapterSpan.textContent!.trim();
+                chapterElement = releaseColumn
+                    .querySelector("span")!
+                    .cloneNode(true) as HTMLSpanElement;
+            }
+
+            const nufElement = releaseColumn
+                .querySelector("span.nuf_link")
+                ?.cloneNode(true) as Element | null;
+
+            const checkBoxElements: Element[] = [];
+            const checkBoxInput = groupColumn
+                .querySelector("input[type=checkbox]")
+                ?.cloneNode(true) as Element | null;
+            if (checkBoxInput) {
+                checkBoxElements.push(checkBoxInput);
+            }
+            const checkBoxLabel = groupColumn
+                .querySelector("label.enableread")
+                ?.cloneNode(true) as Element | null;
+            if (checkBoxLabel) {
+                checkBoxElements.push(checkBoxLabel);
             }
 
             const index = rowReleaseGroup.findIndex((group) =>
@@ -47,23 +64,26 @@ export function consolidateTable(root: Element) {
             if (index !== -1) {
                 rowsToRemove.push(row);
                 rowReleaseGroup[index][releaseTitle].chapters.push({
-                    name: chapterName,
-                    url: chapterUrl,
+                    chapter: chapterElement,
+                    nuf_element: nufElement,
+                    check_box: checkBoxElements,
                 });
             } else {
                 rowReleaseGroup.push({
                     [releaseTitle]: {
-                        name: titleGroup,
-                        url: hrefGroup,
+                        group: groupELement,
                         chapters: [
                             {
-                                name: chapterName,
-                                url: chapterUrl,
+                                chapter: chapterElement,
+                                nuf_element: nufElement,
+                                check_box: checkBoxElements,
                             },
                         ],
                     },
                 });
             }
+
+            groupColumn.remove();
         }
 
         for (const row of rowsToRemove) {
@@ -79,37 +99,46 @@ export function consolidateTable(root: Element) {
             const releaseColumn = row.children[1] as HTMLTableCellElement;
             releaseColumn.replaceChildren();
 
+            const titleColumn = row.children[0] as HTMLTableCellElement;
+            const titleLink = titleColumn.querySelector("a")!;
+            titleLink.textContent = titleLink.title;
+
             for (const title in releaseGroup) {
                 const div = document.createElement("div");
                 div.style.display = "flex";
                 div.style.flexDirection = "column";
                 div.style.marginBottom = "8px";
 
-                const groupLink = document.createElement("a");
                 const item = releaseGroup[title];
-                groupLink.href = item.url;
-                groupLink.title = item.name;
-                groupLink.textContent = item.name;
-                groupLink.style.fontWeight = "bold";
-                div.appendChild(groupLink);
+                item.group.style.fontWeight = "bold";
+                div.appendChild(item.group);
 
                 for (const chapter of item.chapters) {
-                    if (chapter.url) {
-                        const chapterA = document.createElement("a");
-                        chapterA.href = chapter.url;
-                        chapterA.title = chapter.name;
-                        chapterA.textContent = chapter.name;
-                        div.appendChild(chapterA);
-                    } else {
-                        const chapterSpan = document.createElement("span");
-                        chapterSpan.textContent = chapter.name;
-                        chapterSpan.title = chapter.name;
-                        div.appendChild(chapterSpan);
+                    const chapterDiv = document.createElement("div");
+                    chapterDiv.style.display = "flex";
+                    if (chapter.nuf_element) {
+                        chapterDiv.appendChild(chapter.nuf_element);
                     }
+                    chapter.chapter.style.flexGrow = "1";
+                    chapterDiv.appendChild(chapter.chapter);
+                    if (chapter.check_box.length > 0) {
+                        const boxDiv = document.createElement("div");
+                        boxDiv.style.paddingRight = "8px";
+                        const [input, label] = chapter.check_box;
+                        boxDiv.appendChild(input);
+                        boxDiv.appendChild(label);
+                        chapterDiv.appendChild(boxDiv);
+                    }
+                    div.appendChild(chapterDiv);
                 }
 
                 releaseColumn.appendChild(div);
             }
         }
+
+        const headerRow = table.querySelector(
+            "thead>tr",
+        )! as HTMLTableRowElement;
+        headerRow.lastElementChild!.remove();
     }
 }
