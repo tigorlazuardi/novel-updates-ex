@@ -1,4 +1,4 @@
-export type Origin = "[KR]" | "[CN]" | "[JP]";
+export type Origin = "[KR]" | "[CN]" | "[JP]" | "";
 
 type ReleaseItem = {
     group: {
@@ -14,7 +14,7 @@ type ReleaseItem = {
 
 export type Entry = {
     // origin is only available if the user enables the "show origin" option
-    origin?: Origin;
+    origin: Origin;
     index: number;
     title: {
         name: string;
@@ -82,7 +82,7 @@ export function extractReleaseTable(root: Element): ReleaseTable[] {
             )) {
             }
 
-            entries.push({ index, origin, title, release });
+            entries.push({ index, origin: origin ?? "", title, release });
             index++;
         }
         out.push({ index: tableIndex, name: date, entries });

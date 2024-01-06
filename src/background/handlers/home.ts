@@ -4,22 +4,32 @@ import { Document, Element, Text } from "domhandler";
 import { selectOne, selectAll } from "css-select";
 import { log } from "../log";
 import { Message } from "../../types/message";
-import { type Entry } from "../../content/routes/home/extract_tables";
+import {
+    type Origin,
+    type Entry,
+} from "../../content/routes/home/extract_tables";
 import browser from "webextension-polyfill";
 
-type ReleaseTableImageFetchPayload = {
+type ReleaseTableDetailResponse = {
     index: {
         table: number;
         entry: number;
     };
     entry: Entry;
     image: string | null;
+    origin: Origin;
     description: string[];
+    rating: Rating;
+};
+
+type Rating = {
+    rating: number;
+    votes: number;
 };
 
 export type ReleaseTableImageFetchMessage = Message<
     "home::release-table::fetch-details::response",
-    ReleaseTableImageFetchPayload
+    ReleaseTableDetailResponse
 >;
 
 const cacheKey = "release-table::fetch-details";
@@ -27,6 +37,8 @@ const cacheKey = "release-table::fetch-details";
 type CacheItem = {
     image: string;
     description: string[];
+    origin: Origin;
+    rating: Rating;
 };
 
 type CacheResult = {
@@ -43,8 +55,8 @@ bgEvent.on("home::release-table::fetch-details::request", (message) => {
                 const store = result[url];
                 if (store) {
                     const cache = store[cacheKey];
-                    if (cache && cache.image && cache.description) {
-                        const payload: ReleaseTableImageFetchPayload = {
+                    if (cache) {
+                        const payload: ReleaseTableDetailResponse = {
                             index: {
                                 table: table.index,
                                 entry: entry.index,
@@ -52,6 +64,8 @@ bgEvent.on("home::release-table::fetch-details::request", (message) => {
                             entry,
                             image: cache.image,
                             description: cache.description,
+                            origin: cache.origin,
+                            rating: cache.rating,
                         };
                         bgEvent.emit({
                             event: "home::release-table::fetch-details::response",
@@ -60,13 +74,15 @@ bgEvent.on("home::release-table::fetch-details::request", (message) => {
                         return;
                     }
                 }
-                fetch(url, { credentials: "include" })
+                return fetch(url, { credentials: "include" })
                     .then((resp) => resp.text())
                     .then((text) => {
                         const dom = parseDocument(text);
                         const image = extractImageCover(dom);
                         const description = extractDescription(dom);
-                        const payload: ReleaseTableImageFetchPayload = {
+                        const origin = extractOrigin(dom);
+                        const rating = extractRating(dom);
+                        const payload: ReleaseTableDetailResponse = {
                             index: {
                                 table: table.index,
                                 entry: entry.index,
@@ -74,20 +90,26 @@ bgEvent.on("home::release-table::fetch-details::request", (message) => {
                             entry,
                             image,
                             description,
+                            origin,
+                            rating,
                         };
                         bgEvent.emit({
                             event: "home::release-table::fetch-details::response",
                             data: payload,
                         });
 
-                        return browser.storage.local.set({
+                        const cache: CacheResult = {
                             [url]: {
                                 [cacheKey]: {
                                     image,
                                     description,
+                                    origin,
+                                    rating,
                                 },
                             },
-                        });
+                        };
+
+                        return browser.storage.local.set(cache);
                     })
                     .catch((err) => {
                         log("error", "failed to fetch image", err);
@@ -120,6 +142,52 @@ function extractDescription(doc: Document): string[] {
     }
 
     return out;
+}
+
+function extractOrigin(doc: Document): Origin {
+    const el = selectOne("div#showtype > span", doc) as Element | null;
+    if (!el) {
+        return "";
+    }
+    const text = el.children[0] as Text;
+    if (!text) {
+        return "";
+    }
+    return mapOrigin(text.data.trim());
+}
+
+const ratingRegex = /\((.*)\s\/.*,\s(\d+).*/;
+
+function extractRating(doc: Document): Rating {
+    const rating: Rating = {
+        votes: 0,
+        rating: 0,
+    };
+    const el = selectOne("span.uvotes", doc) as Element | null;
+    if (!el) {
+        return rating;
+    }
+    const text = el.children[0] as Text;
+    const match = ratingRegex.exec(text.data);
+    if (!match) {
+        return rating;
+    }
+    rating.rating = parseFloat(match[1]);
+    rating.votes = parseInt(match[2]);
+    return rating;
+}
+
+function mapOrigin(origin: string): Origin {
+    switch (origin) {
+        case "(CN)":
+            return "[CN]";
+        case "(KR)":
+            return "[KR]";
+        case "(JP)":
+            return "[JP]";
+        default:
+            return "";
+    }
 }
 
 export {};

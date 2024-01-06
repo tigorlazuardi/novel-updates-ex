@@ -21,31 +21,71 @@ contentEvent.on("home::release-table::fetch-details::response", (message) => {
         return;
     }
 
-    addCoverToRow(row, message);
+    const coverCell = row.children[0] as HTMLTableCellElement;
+    coverCell.style.display = "flex";
+    coverCell.style.flexDirection = "column";
+    coverCell.style.alignContent = "center";
+    // coverCell.style.justifyContent = "center";
+
+    const divImg = document.createElement("div");
+    divImg.classList.add("ex:image-cover");
+    addCoverToElement(message, divImg);
+    coverCell.appendChild(divImg);
+
+    const divRating = document.createElement("div");
+    addRatingToElement(message, divRating);
+    coverCell.appendChild(divRating);
+
     addDescriptionToRow(row, message);
 });
 
-function addCoverToRow(row: Element, message: ReleaseTableImageFetchMessage) {
-    const coverCell = row.children[0];
-
+function addCoverToElement(
+    message: ReleaseTableImageFetchMessage,
+    target: Element,
+) {
     const img = document.createElement("img");
     img.src = message.data.image ?? "";
     img.alt = message.data.entry.title.name;
     img.width = 200;
     img.height = 200;
     img.style.paddingTop = "10px";
-    img.style.paddingBottom = "10px";
     img.style.display = "block";
     img.style.marginLeft = "auto";
     img.style.marginRight = "auto";
     img.style.borderRadius = "7.5%";
+    target.setAttribute("data-url", message.data.image ?? "");
 
     const a = document.createElement("a");
     a.href = message.data.entry.title.url;
-
     a.appendChild(img);
 
-    coverCell.appendChild(a);
+    target.appendChild(a);
+}
+
+function addRatingToElement(
+    message: ReleaseTableImageFetchMessage,
+    target: Element,
+) {
+    const h6 = document.createElement("h6");
+    h6.style.textAlign = "center";
+
+    let color = "green";
+    if (message.data.rating.rating < 4) {
+        color = "darkblue";
+    }
+    if (message.data.rating.rating < 3) {
+        color = "orange";
+    }
+    if (message.data.rating.rating < 2) {
+        color = "red";
+    }
+
+    h6.innerHTML = `<b style="color: ${color};">${message.data.rating.rating}</b> / 5.0, <b>${message.data.rating.votes}</b> votes`;
+
+    target.classList.add("ex:novel-rating");
+    target.setAttribute("data-rating", message.data.rating.rating.toString());
+    target.setAttribute("data-votes", message.data.rating.votes.toString());
+    target.appendChild(h6);
 }
 
 function addDescriptionToRow(
@@ -134,14 +174,16 @@ function augmentTable(table: HTMLTableElement) {
     const rows = table.querySelectorAll("tbody>tr");
     for (const row of rows) {
         const titleCell = row.children[0] as HTMLTableCellElement;
+        titleCell.width = "60%";
         const titleChildren = titleCell.children;
         const titleDiv = document.createElement("div");
         titleDiv.replaceChildren(...titleChildren);
         titleCell.replaceChildren(titleDiv);
         (titleDiv.children[0] as HTMLElement).style.marginRight = "4px";
 
+        (row.children[1] as HTMLTableCellElement).width = "20%";
+
         const coverCell = document.createElement("td");
-        coverCell.style.width = "20%";
         row.prepend(coverCell);
     }
 }
