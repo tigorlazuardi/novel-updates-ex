@@ -31,6 +31,12 @@ contentEvent.on("home::release-table::fetch-details::response", (message) => {
         entry: message.data.entry,
         detail,
     });
+
+    store.setNamespaced(
+        message.data.entry.title.url,
+        "home::release-table::fetch-details",
+        detail,
+    );
 });
 
 export function handle(_: HandlerContext) {
