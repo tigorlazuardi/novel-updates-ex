@@ -38,7 +38,7 @@ contentEvent.on("home::release-table::fetch-details::response", (message) => {
         return;
     }
 
-    augmentTable(table);
+    modifyColumn(table);
 
     const rows = table.querySelectorAll("tbody>tr");
     const row = rows[message.data.index.entry] as HTMLTableRowElement;
@@ -81,13 +81,12 @@ function addCoverToElement(
     const img = document.createElement("img");
     img.src = message.data.image ?? "";
     img.alt = message.data.entry.title.name;
-    img.width = 200;
-    img.height = 200;
-    img.style.paddingTop = "10px";
+    img.style.padding = "0.5rem";
     img.style.display = "block";
     img.style.marginLeft = "auto";
     img.style.marginRight = "auto";
     img.style.borderRadius = "7.5%";
+    img.style.maxWidth = "15rem";
 
     const a = document.createElement("a");
     a.href = message.data.entry.title.url;
@@ -173,9 +172,9 @@ function addDescriptionToRow(
         const titleCell = row.children[1];
 
         const descriptionContainer = document.createElement("div");
-        descriptionContainer.style.marginTop = "8px";
-        descriptionContainer.style.marginBottom = "8px";
-        descriptionContainer.style.paddingRight = "8px";
+        descriptionContainer.style.marginTop = "1rem";
+        descriptionContainer.style.marginBottom = "1rem";
+        descriptionContainer.style.paddingRight = "3rem";
 
         const hideThreshold = config.home.description.paragraph_threshold;
         let i = 0;
@@ -183,8 +182,8 @@ function addDescriptionToRow(
             const p = document.createElement("p");
             p.textContent = desc;
             p.style.fontSize = "small";
-            p.style.marginTop = "8";
-            p.style.marginBottom = "8";
+            p.style.marginTop = "1rem";
+            p.style.marginBottom = "1rem";
             p.style.paddingTop = "0";
             p.style.paddingBottom = "0";
             p.style.textAlign = "justify";
@@ -204,10 +203,8 @@ function addDescriptionToRow(
             showMore.href = "#";
             showMore.textContent = "Show More";
             showMore.style.fontSize = "small";
-            showMore.style.marginTop = "8px";
-            showMore.style.paddingBottom = "8px";
-            showMore.style.textAlign = "center";
-            showMore.style.color = "blue";
+            showMore.style.marginTop = "1rem";
+            showMore.style.paddingBottom = "2rem";
             showMore.style.textDecorationLine = "underline";
 
             let show = false;
@@ -237,7 +234,7 @@ function addDescriptionToRow(
     });
 }
 
-function augmentTable(table: HTMLTableElement) {
+function modifyColumn(table: HTMLTableElement) {
     const headerRow = table.querySelector("thead>tr")!;
     const headers = headerRow.querySelectorAll("tr>th");
     if (headers.length > 2) {
@@ -253,14 +250,15 @@ function augmentTable(table: HTMLTableElement) {
     const rows = table.querySelectorAll("tbody>tr");
     for (const row of rows) {
         const titleCell = row.children[0] as HTMLTableCellElement;
-        titleCell.width = "60%";
+        const releaseCell = row.children[1] as HTMLTableCellElement;
+        titleCell.removeAttribute("width");
+        releaseCell.removeAttribute("width");
+
         const titleChildren = titleCell.children;
         const titleDiv = document.createElement("div");
         titleDiv.replaceChildren(...titleChildren);
         titleCell.replaceChildren(titleDiv);
         (titleDiv.children[0] as HTMLElement).style.marginRight = "4px";
-
-        (row.children[1] as HTMLTableCellElement).width = "20%";
 
         const coverCell = document.createElement("td");
         row.prepend(coverCell);

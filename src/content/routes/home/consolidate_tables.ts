@@ -104,9 +104,12 @@ export function consolidateTable(root: Element) {
             const row = rows[i];
             const releaseGroup = rowReleaseGroup[i];
             const releaseColumn = row.children[1] as HTMLTableCellElement;
+            releaseColumn.style.minWidth = "10rem";
             releaseColumn.replaceChildren();
 
             const titleColumn = row.children[0] as HTMLTableCellElement;
+            titleColumn.style.paddingRight = "1rem";
+            titleColumn.style.paddingBottom = "2rem";
             const titleLink = titleColumn.querySelector("a")!;
             titleLink.textContent = titleLink.title;
 
