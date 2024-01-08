@@ -1,8 +1,9 @@
 {
-    "manifest_version": 2,
+    "manifest_version": 3,
     "version": "0.0.1",
     "name": "Novel Updates EX",
     "description": "Enhances the Novel Updates Website",
+    "host_permissions": ["*://*.novelupdates.com/*"],
     "browser_specific_settings": {
         "gecko": {
             "id": "novel-updates-ex@novel-updates-ex"
@@ -22,11 +23,5 @@
         "48": "assets/icons/nuex.svg",
         "96": "assets/icons/nuex.svg"
     },
-    "permissions": [
-        "*://*.novelupdates.com/*",
-        "storage",
-        "tabs",
-        "webRequest",
-        "activeTab"
-    ]
+    "permissions": ["storage"]
 }

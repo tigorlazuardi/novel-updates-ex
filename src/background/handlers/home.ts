@@ -21,25 +21,22 @@ export type FetchResponse = {
 
 bgEvent.on("home::release-table::fetch-details::request", (message) => {
     const url = message.data.entry.title.url;
-    fetch(url, { credentials: "include" })
-        .then(async (resp) => {
-            const text = await resp.text();
-            return {
-                status: resp.status,
-                headers: { ...resp.headers },
-                body: text,
-            };
-        })
-        .then((resp) => {
-            bgEvent.emit({
-                event: "home::release-table::fetch-details::response",
-                data: {
-                    index: message.data.index,
-                    entry: message.data.entry,
-                    response: resp,
-                },
-            });
+    fetch(url, { credentials: "include" }).then(async (resp) => {
+        const text = await resp.text();
+        const response = {
+            status: resp.status,
+            headers: { ...resp.headers },
+            body: text,
+        };
+        bgEvent.emit({
+            event: "home::release-table::fetch-details::response",
+            data: {
+                index: message.data.index,
+                entry: message.data.entry,
+                response: response,
+            },
         });
+    });
 });
 
 export {};
