@@ -10,7 +10,7 @@ import {
 } from "../../content/routes/home/extract_tables";
 import store from "../../store";
 
-type ReleaseTableDetailResponse = {
+export type ReleaseTableDetail = {
     index: {
         table: number;
         entry: number;
@@ -27,9 +27,9 @@ type Rating = {
     votes: number;
 };
 
-export type ReleaseTableImageFetchMessage = Message<
+export type ReleaseTableDetailResponse = Message<
     "home::release-table::fetch-details::response",
-    ReleaseTableDetailResponse
+    ReleaseTableDetail
 >;
 
 export type ReleaseDetail = {
@@ -47,7 +47,7 @@ bgEvent.on("home::release-table::fetch-details::request", (message) => {
                 .getNamespaced(url, "home::release-table::fetch-details")
                 .then((result) => {
                     if (result) {
-                        const payload: ReleaseTableDetailResponse = {
+                        const payload: ReleaseTableDetail = {
                             index: {
                                 table: table.index,
                                 entry: entry.index,
@@ -72,7 +72,7 @@ bgEvent.on("home::release-table::fetch-details::request", (message) => {
                             const description = extractDescription(dom);
                             const origin = extractOrigin(dom);
                             const rating = extractRating(dom);
-                            const payload: ReleaseTableDetailResponse = {
+                            const payload: ReleaseTableDetail = {
                                 index: {
                                     table: table.index,
                                     entry: entry.index,

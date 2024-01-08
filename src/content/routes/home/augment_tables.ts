@@ -1,7 +1,32 @@
-import { ReleaseTableImageFetchMessage } from "../../../background/handlers/home";
+import { ReleaseTableDetailResponse } from "../../../background/handlers/home";
 import store from "../../../store";
 import { contentEvent } from "../../events";
 import { log } from "../../log";
+import { Entry, Origin } from "./extract_tables";
+
+export type ReleaseTableDetail = {
+    index: {
+        table: number;
+        entry: number;
+    };
+    entry: Entry;
+    image: string | null;
+    origin: Origin;
+    description: string[];
+    rating: Rating;
+};
+
+export type Rating = {
+    rating: number;
+    votes: number;
+};
+
+export function extractDetail(): ReleaseTableDetail[] {
+    const tables =
+        document.body.querySelectorAll<HTMLTableElement>("table.tablesorter");
+
+    throw new Error("Not implemented");
+}
 
 contentEvent.on("home::release-table::fetch-details::response", (message) => {
     const tables =
@@ -28,7 +53,7 @@ contentEvent.on("home::release-table::fetch-details::response", (message) => {
     coverCell.style.alignContent = "center";
 
     const divImg = document.createElement("div");
-    divImg.classList.add("ex:image-cover");
+    divImg.classList.add("ex--image-cover");
     addCoverToElement(message, divImg);
     addCoverURLAttributeToElement(message, row);
     coverCell.appendChild(divImg);
@@ -50,7 +75,7 @@ contentEvent.on("home::release-table::fetch-details::response", (message) => {
 });
 
 function addCoverToElement(
-    message: ReleaseTableImageFetchMessage,
+    message: ReleaseTableDetailResponse,
     target: Element,
 ) {
     const img = document.createElement("img");
@@ -72,14 +97,14 @@ function addCoverToElement(
 }
 
 function addCoverURLAttributeToElement(
-    message: ReleaseTableImageFetchMessage,
+    message: ReleaseTableDetailResponse,
     target: Element,
 ) {
     target.setAttribute("data-image-url", message.data.image ?? "");
 }
 
 function addRatingToElement(
-    message: ReleaseTableImageFetchMessage,
+    message: ReleaseTableDetailResponse,
     target: Element,
 ) {
     const p = document.createElement("p");
@@ -99,12 +124,12 @@ function addRatingToElement(
 
     p.innerHTML = `<b style="color: ${color};">${message.data.rating.rating}</b> / 5.0, <b>${message.data.rating.votes}</b> votes`;
 
-    target.classList.add("ex:novel-rating");
+    target.classList.add("ex--novel-rating");
     target.appendChild(p);
 }
 
 function addRatingAttributeToElement(
-    message: ReleaseTableImageFetchMessage,
+    message: ReleaseTableDetailResponse,
     target: Element,
 ) {
     target.setAttribute("data-rating", message.data.rating.rating.toString());
@@ -112,7 +137,7 @@ function addRatingAttributeToElement(
 }
 
 function addOriginToElement(
-    message: ReleaseTableImageFetchMessage,
+    message: ReleaseTableDetailResponse,
     target: Element,
 ) {
     const span = document.createElement("span");
@@ -134,7 +159,7 @@ function addOriginToElement(
 }
 
 function addOriginAttributeToElement(
-    message: ReleaseTableImageFetchMessage,
+    message: ReleaseTableDetailResponse,
     target: Element,
 ) {
     target.setAttribute("data-origin", message.data.origin);
@@ -142,7 +167,7 @@ function addOriginAttributeToElement(
 
 function addDescriptionToRow(
     row: Element,
-    message: ReleaseTableImageFetchMessage,
+    message: ReleaseTableDetailResponse,
 ) {
     store.config().then((config) => {
         const titleCell = row.children[1];

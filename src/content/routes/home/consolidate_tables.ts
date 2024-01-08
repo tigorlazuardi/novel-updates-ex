@@ -2,7 +2,7 @@ type ReleaseItem = {
     group: HTMLAnchorElement;
     chapters: {
         chapter: HTMLAnchorElement | HTMLSpanElement;
-        nuf_element: Element | null;
+        nuf_element: HTMLSpanElement | null;
         check_box: Element[];
     }[];
 };
@@ -42,7 +42,14 @@ export function consolidateTable(root: Element) {
 
             const nufElement = releaseColumn
                 .querySelector("span.nuf_link")
-                ?.cloneNode(true) as Element | null;
+                ?.cloneNode(true) as HTMLSpanElement | null;
+
+            if (nufElement) {
+                const a = nufElement.querySelector("a");
+                if (a) {
+                    nufElement.setAttribute("data-nuf-link", a.href);
+                }
+            }
 
             const checkBoxElements: Element[] = [];
             const checkBoxInput = groupColumn
@@ -108,20 +115,39 @@ export function consolidateTable(root: Element) {
                 div.style.display = "flex";
                 div.style.flexDirection = "column";
                 div.style.marginBottom = "8px";
+                div.classList.add("ex--release-group");
 
                 const item = releaseGroup[title];
                 item.group.style.fontWeight = "bold";
-                item.group.classList.add("ex:group-link");
+                item.group.classList.add("ex--group-link");
+                div.setAttribute("data-translator", item.group.title);
+                div.setAttribute("data-translator-url", item.group.href);
                 div.appendChild(item.group);
 
                 for (const chapter of item.chapters) {
                     const chapterDiv = document.createElement("div");
+                    chapterDiv.classList.add("ex--chapter-link");
                     chapterDiv.style.display = "flex";
                     if (chapter.nuf_element) {
                         chapterDiv.appendChild(chapter.nuf_element);
+                        const nufLink =
+                            chapter.nuf_element.getAttribute("data-nuf-link");
+                        if (nufLink) {
+                            chapterDiv.setAttribute("data-nuf-link", nufLink);
+                        }
                     }
                     chapter.chapter.style.flexGrow = "1";
                     chapterDiv.appendChild(chapter.chapter);
+                    chapterDiv.setAttribute(
+                        "data-chapter-name",
+                        chapter.chapter.textContent ?? "",
+                    );
+                    if (chapter.chapter instanceof HTMLAnchorElement) {
+                        chapterDiv.setAttribute(
+                            "data-chapter-url",
+                            chapter.chapter.href,
+                        );
+                    }
                     if (chapter.check_box.length > 0) {
                         const boxDiv = document.createElement("div");
                         boxDiv.style.paddingRight = "8px";
