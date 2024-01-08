@@ -1,4 +1,4 @@
-import { log } from "../../log";
+import { modifyRow } from "./modify_row";
 
 export type Origin = "[KR]" | "[CN]" | "[JP]" | "";
 
@@ -33,16 +33,20 @@ export type ReleaseTable = {
     entries: Entry[];
 };
 
+export type ReleaseDetail = {
+    image: string;
+    origin: Origin;
+    description: string[];
+    rating: Rating;
+};
+
 export type ReleaseTableDetail = {
     index: {
         table: number;
         entry: number;
     };
     entry: Entry;
-    image: string | null;
-    origin: Origin;
-    description: string[];
-    rating: Rating;
+    detail: ReleaseDetail;
 };
 
 export type Rating = {
@@ -51,7 +55,7 @@ export type Rating = {
 };
 
 export function extractEntry(row: HTMLTableRowElement, index: number): Entry {
-    const [titleColumn, releaseColumn] = row.children;
+    const [_, titleColumn, releaseColumn] = row.children;
 
     const origin = (titleColumn.querySelector("span")?.textContent?.trim() ??
         undefined) as Origin | undefined;
@@ -114,4 +118,18 @@ export function extractReleaseTable(root: Element): ReleaseTable[] {
     }
 
     return out;
+}
+
+export function applyDetail(root: Element, data: ReleaseTableDetail) {
+    const tables = root.querySelectorAll<HTMLTableElement>("table.tablesorter");
+    const table = tables[data.index.table];
+    if (!table) {
+        return;
+    }
+    const rows = table.querySelectorAll("tbody>tr");
+    const row = rows[data.index.entry] as HTMLTableRowElement;
+    if (!row) {
+        return;
+    }
+    modifyRow(row, data);
 }

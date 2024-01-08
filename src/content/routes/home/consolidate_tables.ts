@@ -15,19 +15,21 @@ export function consolidateTable(root: Element) {
     const tables = root.querySelectorAll<HTMLTableElement>("table.tablesorter");
 
     for (const table of tables) {
+        prepareHeader(table);
+
         const rowsToRemove: Element[] = [];
         let rows = table.querySelectorAll<HTMLTableRowElement>("tbody > tr");
 
         const rowReleaseGroup: ReleaseGroup[] = [];
 
         for (const row of rows) {
-            const [titleColumn, releaseColumn, groupColumn] = row.children;
-            const releaseTitle = titleColumn.querySelector("a")!.title;
-            const groupELement = groupColumn
+            const [titleCell, releaseCell, groupCell] = row.children;
+            const releaseTitle = titleCell.querySelector("a")!.title;
+            const groupELement = groupCell
                 .querySelector("a")!
                 .cloneNode(true) as HTMLAnchorElement;
             let chapterElement: HTMLAnchorElement | HTMLSpanElement;
-            const chapterContent = releaseColumn.querySelector(
+            const chapterContent = releaseCell.querySelector(
                 "a.chp-release",
             ) as HTMLAnchorElement | null;
             if (chapterContent) {
@@ -35,12 +37,12 @@ export function consolidateTable(root: Element) {
                     true,
                 ) as HTMLAnchorElement;
             } else {
-                chapterElement = releaseColumn
+                chapterElement = releaseCell
                     .querySelector("span")!
                     .cloneNode(true) as HTMLSpanElement;
             }
 
-            const nufElement = releaseColumn
+            const nufElement = releaseCell
                 .querySelector("span.nuf_link")
                 ?.cloneNode(true) as HTMLSpanElement | null;
 
@@ -52,13 +54,13 @@ export function consolidateTable(root: Element) {
             }
 
             const checkBoxElements: Element[] = [];
-            const checkBoxInput = groupColumn
+            const checkBoxInput = groupCell
                 .querySelector("input[type=checkbox]")
                 ?.cloneNode(true) as Element | null;
             if (checkBoxInput) {
                 checkBoxElements.push(checkBoxInput);
             }
-            const checkBoxLabel = groupColumn
+            const checkBoxLabel = groupCell
                 .querySelector("label.enableread")
                 ?.cloneNode(true) as Element | null;
             if (checkBoxLabel) {
@@ -90,7 +92,7 @@ export function consolidateTable(root: Element) {
                 });
             }
 
-            groupColumn.remove();
+            groupCell.remove();
         }
 
         for (const row of rowsToRemove) {
@@ -105,11 +107,13 @@ export function consolidateTable(root: Element) {
             const releaseGroup = rowReleaseGroup[i];
             const releaseColumn = row.children[1] as HTMLTableCellElement;
             releaseColumn.style.minWidth = "10rem";
+            releaseColumn.removeAttribute("width");
             releaseColumn.replaceChildren();
 
             const titleColumn = row.children[0] as HTMLTableCellElement;
             titleColumn.style.paddingRight = "1rem";
             titleColumn.style.paddingBottom = "2rem";
+            titleColumn.removeAttribute("width");
             const titleLink = titleColumn.querySelector("a")!;
             titleLink.textContent = titleLink.title;
 
@@ -153,7 +157,7 @@ export function consolidateTable(root: Element) {
                     }
                     if (chapter.check_box.length > 0) {
                         const boxDiv = document.createElement("div");
-                        boxDiv.style.paddingRight = "8px";
+                        boxDiv.style.paddingRight = "1rem";
                         const [input, label] = chapter.check_box;
                         boxDiv.appendChild(input);
                         boxDiv.appendChild(label);
@@ -164,6 +168,8 @@ export function consolidateTable(root: Element) {
 
                 releaseColumn.appendChild(div);
             }
+            const coverCell = document.createElement("td");
+            row.prepend(coverCell);
         }
 
         const headerRow = table.querySelector(
@@ -171,4 +177,18 @@ export function consolidateTable(root: Element) {
         )! as HTMLTableRowElement;
         headerRow.lastElementChild!.remove();
     }
+}
+
+function prepareHeader(table: HTMLTableElement) {
+    const headerRow = table.querySelector("thead>tr")!;
+    const headers = headerRow.querySelectorAll("tr>th");
+    if (headers[0].textContent === "Cover") {
+        return;
+    }
+
+    const header = document.createElement("th");
+    header.textContent = "Cover";
+    header.className = "header";
+
+    headerRow.prepend(header);
 }
