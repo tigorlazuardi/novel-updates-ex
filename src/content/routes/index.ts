@@ -27,7 +27,11 @@ class Handler {
     handle(path: string) {
         for (const [re, cb] of this.handlers) {
             if (re.test(path)) {
-                cb({ path, handler: this, match: path.match(re) });
+                cb({
+                    path,
+                    handler: this,
+                    match: path.match(re),
+                });
                 return;
             }
         }

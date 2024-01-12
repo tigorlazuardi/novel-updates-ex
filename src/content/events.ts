@@ -1,8 +1,8 @@
 import browser from "webextension-polyfill";
-import { EventMap } from "../types/message";
+import { EventSend } from "../types/message";
 
 export class EventHandler {
-    private handlers: Map<keyof EventMap, ((message: any) => void)[]> =
+    private handlers: Map<keyof EventSend, ((message: any) => void)[]> =
         new Map();
 
     constructor() {
@@ -22,9 +22,9 @@ export class EventHandler {
     /**
      * on adds a callback to the event handler
      */
-    on<E extends keyof EventMap>(
+    on<E extends keyof EventSend>(
         event: E,
-        callback: (message: EventMap[E]) => void,
+        callback: (message: EventSend[E]) => void,
     ) {
         const handlers = this.handlers.get(event) || [];
         handlers.push(callback);
@@ -35,11 +35,11 @@ export class EventHandler {
      * once adds a callback to the event handler that will be removed after
      * completion
      */
-    once<E extends keyof EventMap>(
+    once<E extends keyof EventSend>(
         event: E,
-        callback: (message: EventMap[E]) => void,
+        callback: (message: EventSend[E]) => void,
     ) {
-        const handler = (message: EventMap[E]) => {
+        const handler = (message: EventSend[E]) => {
             callback(message);
             this.off(event, handler);
         };
@@ -49,9 +49,9 @@ export class EventHandler {
     /**
      * off removes a callback from the event handler
      */
-    off<E extends keyof EventMap>(
+    off<E extends keyof EventSend>(
         event: E,
-        callback: (message: EventMap[E]) => void,
+        callback: (message: EventSend[E]) => void,
     ) {
         const handlers = this.handlers.get(event) || [];
         const index = handlers.indexOf(callback);
@@ -63,7 +63,7 @@ export class EventHandler {
     /**
      * emit send a message to the content script
      */
-    async emit(message: EventMap[keyof EventMap]) {
+    async emit(message: EventSend[keyof EventSend]) {
         browser.runtime.connect().postMessage(message);
     }
 }

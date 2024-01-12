@@ -1,14 +1,10 @@
 import { type LogLevelName } from "roarr";
-import { ReleaseTableMessage } from "../content/routes/home";
-import { ReleaseTableDetailResponse } from "../background/handlers/home";
 
-export interface EventMap {
+export interface EventSend {
     log: LogMessage;
-    ["home::release-table::fetch-details::request"]: ReleaseTableMessage;
-    ["home::release-table::fetch-details::response"]: ReleaseTableDetailResponse;
 }
 
-export interface Message<E extends keyof EventMap, T = unknown> {
+export interface Message<E extends keyof EventSend, T = unknown> {
     event: E;
     data: T;
 }

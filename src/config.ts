@@ -14,6 +14,10 @@ export type Config = {
                 lte: number;
             };
         };
+        expand_table_width: {
+            enable: boolean;
+            value: string;
+        };
         description: {
             /**
              * If there is more paragraphs than this threshold, the description
@@ -37,6 +41,10 @@ export const defaultConfig: Config = {
                 gte: -1,
                 lte: -1,
             },
+        },
+        expand_table_width: {
+            enable: true,
+            value: "100vw",
         },
         description: {
             paragraph_threshold: 2,

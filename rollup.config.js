@@ -69,78 +69,78 @@ export default defineConfig([
             },
         },
     },
-    {
-        /* background scripts firefox */
-        input: "src/background/index.ts",
-        output: {
-            sourcemap: !production,
-            file: "dist/firefox/background.js",
-            format: "esm",
-        },
-        plugins: [
-            typescript(),
-            replace({
-                preventAssignment: true,
-                values: {
-                    "process.env.NODE_ENV": JSON.stringify(nodeEnv),
-                },
-                delimiters: ["", ""],
-            }),
-            resolve({ browser: true, preferBuiltins: false }),
-            commonjs(),
-            cleanup({ comments: "none" }),
-            copy({
-                targets: [
-                    {
-                        src: "src/background/index.html",
-                        dest: "dist/firefox/background",
-                    },
-                ],
-            }),
-        ],
-        watch: {
-            chokidar: {
-                usePolling: true,
-            },
-            clearScreen: true,
-        },
-    },
-    {
-        /* background scripts chrome */
-        input: "src/background/index.ts",
-        output: {
-            sourcemap: !production,
-            file: "dist/chrome/background.js",
-            format: "esm",
-        },
-        plugins: [
-            typescript(),
-            replace({
-                preventAssignment: true,
-                values: {
-                    "process.env.NODE_ENV": JSON.stringify(nodeEnv),
-                },
-                delimiters: ["", ""],
-            }),
-            resolve({ browser: true, preferBuiltins: false }),
-            commonjs(),
-            cleanup({ comments: "none" }),
-            copy({
-                targets: [
-                    {
-                        src: "src/background/index.html",
-                        dest: "dist/chrome/background",
-                    },
-                ],
-            }),
-        ],
-        watch: {
-            clearScreen: true,
-            chokidar: {
-                usePolling: true,
-            },
-        },
-    },
+    // {
+    //     /* background scripts firefox */
+    //     input: "src/background/index.ts",
+    //     output: {
+    //         sourcemap: !production,
+    //         file: "dist/firefox/background.js",
+    //         format: "esm",
+    //     },
+    //     plugins: [
+    //         typescript(),
+    //         replace({
+    //             preventAssignment: true,
+    //             values: {
+    //                 "process.env.NODE_ENV": JSON.stringify(nodeEnv),
+    //             },
+    //             delimiters: ["", ""],
+    //         }),
+    //         resolve({ browser: true, preferBuiltins: false }),
+    //         commonjs(),
+    //         cleanup({ comments: "none" }),
+    //         copy({
+    //             targets: [
+    //                 {
+    //                     src: "src/background/index.html",
+    //                     dest: "dist/firefox/background",
+    //                 },
+    //             ],
+    //         }),
+    //     ],
+    //     watch: {
+    //         chokidar: {
+    //             usePolling: true,
+    //         },
+    //         clearScreen: true,
+    //     },
+    // },
+    // {
+    //     /* background scripts chrome */
+    //     input: "src/background/index.ts",
+    //     output: {
+    //         sourcemap: !production,
+    //         file: "dist/chrome/background.js",
+    //         format: "esm",
+    //     },
+    //     plugins: [
+    //         typescript(),
+    //         replace({
+    //             preventAssignment: true,
+    //             values: {
+    //                 "process.env.NODE_ENV": JSON.stringify(nodeEnv),
+    //             },
+    //             delimiters: ["", ""],
+    //         }),
+    //         resolve({ browser: true, preferBuiltins: false }),
+    //         commonjs(),
+    //         cleanup({ comments: "none" }),
+    //         copy({
+    //             targets: [
+    //                 {
+    //                     src: "src/background/index.html",
+    //                     dest: "dist/chrome/background",
+    //                 },
+    //             ],
+    //         }),
+    //     ],
+    //     watch: {
+    //         clearScreen: true,
+    //         chokidar: {
+    //             usePolling: true,
+    //         },
+    //     },
+    // },
     {
         input: "src/dummy.ts",
         output: {
