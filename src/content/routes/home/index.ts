@@ -3,7 +3,6 @@ import { Entry, applyDetail, extractReleaseTable } from "./extract_tables";
 import { consolidateTable } from "./consolidate_tables";
 import store from "../../../store";
 import { extractDetailFromHTML } from "./extract_detail";
-import { log } from "../../log";
 
 export type FetchDetailRequest = {
     index: {
