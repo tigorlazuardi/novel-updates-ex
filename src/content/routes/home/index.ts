@@ -3,6 +3,7 @@ import { Entry, applyDetail, extractReleaseTable } from "./extract_tables";
 import { consolidateTable } from "./consolidate_tables";
 import store from "../../../store";
 import { extractDetailFromHTML } from "./extract_detail";
+import { renderOption } from "./render_options";
 
 export type FetchDetailRequest = {
     index: {
@@ -14,12 +15,13 @@ export type FetchDetailRequest = {
 
 export async function handle(_: HandlerContext) {
     const config = await store.config();
+    renderOption(config);
     if (config.home.expand_table_width.enable) {
         const content = document.querySelector(
             ".l-submain-h",
         ) as HTMLElement | null;
         if (content) {
-            content.style.maxWidth = "100vw";
+            content.style.maxWidth = config.home.expand_table_width.value;
         }
     }
 

@@ -51,7 +51,30 @@ class Store {
         const result = await browser.storage.local.get("config");
         return result.config;
     }
+
+    getSize(obj: object): number {
+        return sizeOf(obj);
+    }
 }
+
+const typeSizes = {
+    undefined: () => 0,
+    boolean: () => 4,
+    number: () => 8,
+    symbol: () => 8,
+    bigint: () => 24,
+    function: () => 0,
+    string: (item: string) => 2 * item.length,
+    object: (item: any): number =>
+        !item
+            ? 0
+            : Object.keys(item).reduce(
+                  (total, key) => sizeOf(key) + sizeOf(item[key]) + total,
+                  0,
+              ),
+};
+
+const sizeOf = (value: any) => typeSizes[typeof value](value);
 
 /**
  * store abstracts browser storage's behavior for safer access and less
