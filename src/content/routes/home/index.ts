@@ -16,7 +16,6 @@ export type FetchDetailRequest = {
 
 export async function handle(_: HandlerContext) {
     const config = await store.config();
-    renderOption(config);
     if (config.home.expand_table_width.enable) {
         const content = document.querySelector(
             ".l-submain-h",
@@ -71,5 +70,19 @@ export async function handle(_: HandlerContext) {
         }
     }
 
-    modifyScribbleHub(document.body);
+    await modifyScribbleHub(document.body);
+
+    const renderFn = (div: HTMLDivElement) => {
+        const old = document.querySelector("div#ex--option");
+        if (old) {
+            old.replaceWith(div);
+            return;
+        }
+        const optionRenderTarget = document.querySelector("div.release>br");
+        if (optionRenderTarget) {
+            optionRenderTarget.after(div);
+        }
+    };
+
+    renderOption(config, renderFn);
 }

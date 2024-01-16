@@ -1,6 +1,7 @@
+import merge from "lodash.merge";
+import browser from "webextension-polyfill";
 import { Config } from "./config";
 import { StoreMap } from "./types/store";
-import browser from "webextension-polyfill";
 
 class Store {
     /**
@@ -52,10 +53,24 @@ class Store {
         return result.config;
     }
 
+    async updateConfig(config: DeepPartial<Config>) {
+        const currentConfig = await this.config();
+        const newConfig = merge(currentConfig, config);
+        return browser.storage.local.set({
+            config: newConfig,
+        });
+    }
+
     getSize(obj: object): number {
         return sizeOf(obj);
     }
 }
+
+type DeepPartial<T> = T extends object
+    ? {
+          [P in keyof T]?: DeepPartial<T[P]>;
+      }
+    : T;
 
 const typeSizes = {
     undefined: () => 0,
