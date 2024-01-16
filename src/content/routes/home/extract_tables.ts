@@ -104,7 +104,7 @@ export function extractReleaseTable(root: Element): ReleaseTable[] {
 
     let tableIndex = 0;
     for (const table of tables) {
-        const name = table.previousElementSibling?.textContent?.trim() ?? "";
+        const name = table.getAttribute("data-table-name") ?? "";
         const rows = table.querySelectorAll<HTMLTableRowElement>("tbody > tr");
         const entries: Entry[] = [];
         let index = 0;

@@ -1,8 +1,9 @@
 import { HandlerContext } from "..";
-import { Entry, applyDetail, extractReleaseTable } from "./extract_tables";
-import { consolidateTable } from "./consolidate_tables";
 import store from "../../../store";
+import { consolidateTable } from "./consolidate_tables";
 import { extractDetailFromHTML } from "./extract_detail";
+import { Entry, applyDetail, extractReleaseTable } from "./extract_tables";
+import { modifyScribbleHub } from "./modify_scribble_hub";
 import { renderOption } from "./render_options";
 
 export type FetchDetailRequest = {
@@ -69,4 +70,6 @@ export async function handle(_: HandlerContext) {
                 });
         }
     }
+
+    modifyScribbleHub(document.body);
 }

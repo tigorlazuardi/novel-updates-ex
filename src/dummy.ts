@@ -2,6 +2,7 @@
 
 console.log(
     "This file is a dummy file to support entry points for rollup plugins",
+    "This file will not be included when packaging the extension",
 );
 
 export {};

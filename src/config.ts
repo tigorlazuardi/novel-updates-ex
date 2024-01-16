@@ -25,6 +25,9 @@ export type Config = {
              */
             paragraph_threshold: number;
         };
+        scribble_hub: {
+            hide: boolean;
+        };
     };
 };
 
@@ -48,6 +51,9 @@ export const defaultConfig: Config = {
         },
         description: {
             paragraph_threshold: 2,
+        },
+        scribble_hub: {
+            hide: false,
         },
     },
 };

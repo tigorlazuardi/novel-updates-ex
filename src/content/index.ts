@@ -1,6 +1,6 @@
-import * as routes from "./routes";
 import browser from "webextension-polyfill";
 import { defaultConfig } from "../config";
+import * as routes from "./routes";
 
 async function prepare() {
     // uncomment when needed
@@ -14,7 +14,6 @@ async function prepare() {
         ...defaultConfig,
         ...previousConfig.config,
     };
-    console.table(config);
     await browser.storage.local.set({ config });
 }
 

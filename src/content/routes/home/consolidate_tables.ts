@@ -15,6 +15,9 @@ export function consolidateTable(root: Element) {
     const tables = root.querySelectorAll<HTMLTableElement>("table.tablesorter");
 
     for (const table of tables) {
+        const name = table.previousElementSibling?.textContent?.trim() ?? "";
+        table.setAttribute("data-table-name", name);
+
         prepareHeader(table);
 
         const rowsToRemove: Element[] = [];
