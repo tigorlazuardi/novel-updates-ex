@@ -1,7 +1,6 @@
-import store from "../../../../store";
+import { Config } from "../../../../config";
 import { reRenderDescriptions } from "./description";
 
-export async function reRenderTable() {
-    const config = await store.config();
+export function reRenderTable(config: Config) {
     reRenderDescriptions(config);
 }

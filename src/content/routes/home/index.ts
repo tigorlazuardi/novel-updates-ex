@@ -5,7 +5,7 @@ import { extractDetailFromHTML } from "./extract_detail";
 import { Entry, applyDetail, extractReleaseTable } from "./extract_tables";
 import { modifyScribbleHub } from "./modify_scribble_hub";
 import { reRenderTable } from "./re_render";
-import { renderOption } from "./options";
+import { ReRenderFn, renderOption } from "./options";
 
 export type FetchDetailRequest = {
     index: {
@@ -73,8 +73,8 @@ export async function handle(_: HandlerContext) {
 
     await modifyScribbleHub(document.body);
 
-    const renderFn = (div: HTMLDivElement) => {
-        reRenderTable();
+    const renderFn: ReRenderFn = (config, div) => {
+        reRenderTable(config);
         const old = document.querySelector("div#ex--option");
         if (old) {
             old.replaceWith(div);
@@ -86,5 +86,5 @@ export async function handle(_: HandlerContext) {
         }
     };
 
-    renderOption(config, renderFn);
+    await renderOption(renderFn);
 }
