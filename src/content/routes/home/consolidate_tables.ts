@@ -112,15 +112,19 @@ export function consolidateTable(root: Element) {
             const releaseGroup = rowReleaseGroup[i];
             const releaseColumn = row.children[1] as HTMLTableCellElement;
             releaseColumn.style.minWidth = "10rem";
+            releaseColumn.style.paddingTop = "2rem";
+            releaseColumn.style.paddingBottom = "1rem";
             releaseColumn.removeAttribute("width");
             releaseColumn.replaceChildren();
 
             const titleColumn = row.children[0] as HTMLTableCellElement;
             titleColumn.style.paddingRight = "1rem";
+            titleColumn.style.paddingTop = "2rem";
             titleColumn.style.paddingBottom = "2rem";
             titleColumn.removeAttribute("width");
             const titleLink = titleColumn.querySelector("a")!;
             titleLink.textContent = titleLink.title;
+            titleLink.style.fontWeight = "bold";
 
             for (const title in releaseGroup) {
                 const div = document.createElement("div");
@@ -175,6 +179,7 @@ export function consolidateTable(root: Element) {
             }
             const metadataCell = document.createElement("td");
             metadataCell.setAttribute("data-column-name", "metadata");
+            metadataCell.style.paddingTop = "1rem";
             row.prepend(metadataCell);
         }
 
