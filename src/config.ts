@@ -4,7 +4,7 @@ export type Config = {
     home: {
         filter: {
             include_favorites: boolean;
-            origins: Origin[];
+            exclude_origins: Origin[];
             rating: {
                 gte: number;
                 lte: number;
@@ -35,7 +35,7 @@ export const defaultConfig: Config = {
     home: {
         filter: {
             include_favorites: false,
-            origins: [],
+            exclude_origins: [],
             rating: {
                 gte: -1,
                 lte: -1,
