@@ -72,8 +72,38 @@ type RenderSignal = () => void;
 
 function createParagraphThresholdInput(config: Config, signal: RenderSignal) {
     const label = document.createElement("label");
-    label.textContent = "Paragraph Threshold";
+    label.textContent = "Description Paragraph Threshold";
     label.setAttribute("for", "ex-paragraph-threshold");
+
+    const infoIcon = document.createElement("i");
+    infoIcon.classList.add("fa", "fa-info-circle");
+    infoIcon.style.marginLeft = "0.5rem";
+    label.appendChild(infoIcon);
+
+    const tooltipGroup = document.createElement("div");
+    tooltipGroup.style.display = "none";
+
+    const hr1 = document.createElement("hr");
+    tooltipGroup.appendChild(hr1);
+
+    const tip = document.createElement("span");
+    tip.textContent = `The number of description paragraphs to show before the "Show More" button appears.`;
+    tooltipGroup.appendChild(tip);
+
+    const hr2 = document.createElement("hr");
+    tooltipGroup.appendChild(hr2);
+
+    label.appendChild(tooltipGroup);
+
+    let show = false;
+    label.addEventListener("click", () => {
+        if (show) {
+            tooltipGroup.style.display = "none";
+        } else {
+            tooltipGroup.style.display = "block";
+        }
+        show = !show;
+    });
 
     const input = document.createElement("input");
     input.type = "number";
