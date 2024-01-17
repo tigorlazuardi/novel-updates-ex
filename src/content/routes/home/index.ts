@@ -5,7 +5,7 @@ import { extractDetailFromHTML } from "./extract_detail";
 import { Entry, applyDetail, extractReleaseTable } from "./extract_tables";
 import { modifyScribbleHub } from "./modify_scribble_hub";
 import { reRenderTable } from "./re_render";
-import { renderOption } from "./render_options";
+import { renderOption } from "./options";
 
 export type FetchDetailRequest = {
     index: {

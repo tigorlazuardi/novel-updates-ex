@@ -1,5 +1,5 @@
-import { Config } from "../../../config";
-import store from "../../../store";
+import { Config } from "../../../../config";
+import store from "../../../../store";
 
 type RenderFn = (div: HTMLDivElement) => void;
 
