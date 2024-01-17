@@ -4,6 +4,7 @@ import { consolidateTable } from "./consolidate_tables";
 import { extractDetailFromHTML } from "./extract_detail";
 import { Entry, applyDetail, extractReleaseTable } from "./extract_tables";
 import { modifyScribbleHub } from "./modify_scribble_hub";
+import { reRenderTable } from "./re_render";
 import { renderOption } from "./render_options";
 
 export type FetchDetailRequest = {
@@ -73,6 +74,7 @@ export async function handle(_: HandlerContext) {
     await modifyScribbleHub(document.body);
 
     const renderFn = (div: HTMLDivElement) => {
+        reRenderTable();
         const old = document.querySelector("div#ex--option");
         if (old) {
             old.replaceWith(div);

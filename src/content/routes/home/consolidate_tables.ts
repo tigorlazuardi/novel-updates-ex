@@ -27,6 +27,8 @@ export function consolidateTable(root: Element) {
 
         for (const row of rows) {
             const [titleCell, releaseCell, groupCell] = row.children;
+            titleCell.setAttribute("data-column-name", "title");
+            releaseCell.setAttribute("data-column-name", "release");
             const releaseTitle = titleCell.querySelector("a")!.title;
             const groupELement = groupCell
                 .querySelector("a")!

@@ -132,6 +132,7 @@ function addOriginAttributeToElement(
 function addDescriptionToElement(data: ReleaseTableDetail, target: Element) {
     store.config().then((config) => {
         const descriptionContainer = document.createElement("div");
+        descriptionContainer.classList.add("ex--description");
         descriptionContainer.style.marginTop = "1rem";
         descriptionContainer.style.marginBottom = "1rem";
         descriptionContainer.style.paddingRight = "3rem";
@@ -160,37 +161,42 @@ function addDescriptionToElement(data: ReleaseTableDetail, target: Element) {
         target.appendChild(descriptionContainer);
 
         if (i > hideThreshold) {
-            const showMore = document.createElement("a");
-            showMore.href = "#";
-            showMore.textContent = "Show More";
-            showMore.style.fontSize = "small";
-            showMore.style.marginTop = "1rem";
-            showMore.style.paddingBottom = "2rem";
-            showMore.style.textDecorationLine = "underline";
+            const showButton = document.createElement("a");
+            showButton.classList.add("ex--show");
+            showButton.href = "#";
+            showButton.textContent = "Show More";
+            showButton.style.fontSize = "small";
+            showButton.style.marginTop = "1rem";
+            showButton.style.paddingBottom = "2rem";
+            showButton.style.textDecorationLine = "underline";
 
             let show = false;
 
-            showMore.addEventListener("click", (e) => {
+            showButton.addEventListener("click", (e) => {
                 e.preventDefault();
-                if (show) {
-                    let j = 0;
-                    for (const p of descriptionContainer.children) {
-                        if (j >= hideThreshold) {
-                            (p as HTMLElement).style.display = "none";
+                store.config().then((config) => {
+                    const threshold =
+                        config.home.description.paragraph_threshold;
+                    if (show) {
+                        let j = 0;
+                        for (const p of descriptionContainer.children) {
+                            if (j >= threshold) {
+                                (p as HTMLElement).style.display = "none";
+                            }
+                            j++;
                         }
-                        j++;
+                        showButton.textContent = "Show More";
+                    } else {
+                        for (const p of descriptionContainer.children) {
+                            (p as HTMLElement).style.display = "block";
+                        }
+                        showButton.textContent = "Show Less";
                     }
-                    showMore.textContent = "Show More";
-                } else {
-                    for (const p of descriptionContainer.children) {
-                        (p as HTMLElement).style.display = "block";
-                    }
-                    showMore.textContent = "Show Less";
-                }
-                show = !show;
+                    show = !show;
+                });
             });
 
-            target.appendChild(showMore);
+            target.appendChild(showButton);
         }
     });
 }

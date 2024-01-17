@@ -80,9 +80,13 @@ function createParagraphThresholdInput(config: Config, signal: RenderSignal) {
     input.name = "ex-paragraph-threshold";
     input.value = config.home.description.paragraph_threshold.toString();
     input.addEventListener("change", () => {
-        const value = parseInt(input.value);
+        let value = parseInt(input.value);
         if (isNaN(value)) {
             return;
+        }
+        if (value < 0) {
+            input.value = "0";
+            value = 0;
         }
         store
             .updateConfig({
