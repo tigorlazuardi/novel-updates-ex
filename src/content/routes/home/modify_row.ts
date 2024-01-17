@@ -49,6 +49,7 @@ export function modifyRow(row: HTMLTableRowElement, data: ReleaseTableDetail) {
 
 function addCoverToElement(data: ReleaseTableDetail, target: Element) {
     const img = document.createElement("img");
+    img.classList.add("ex--cover-image");
     img.src = data.detail.image ?? "";
     img.alt = data.entry.title.name;
     img.style.padding = "0.5rem";
@@ -56,7 +57,8 @@ function addCoverToElement(data: ReleaseTableDetail, target: Element) {
     img.style.marginLeft = "auto";
     img.style.marginRight = "auto";
     img.style.borderRadius = "7.5%";
-    img.style.maxWidth = "15rem";
+    img.style.maxWidth = "20rem";
+    img.style.width = "15vw";
 
     const a = document.createElement("a");
     a.href = data.entry.title.url;
