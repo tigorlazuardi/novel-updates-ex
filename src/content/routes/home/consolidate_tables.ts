@@ -173,8 +173,9 @@ export function consolidateTable(root: Element) {
 
                 releaseColumn.appendChild(div);
             }
-            const coverCell = document.createElement("td");
-            row.prepend(coverCell);
+            const metadataCell = document.createElement("td");
+            metadataCell.setAttribute("data-column-name", "metadata");
+            row.prepend(metadataCell);
         }
 
         const headerRow = table.querySelector(
@@ -187,12 +188,12 @@ export function consolidateTable(root: Element) {
 function prepareHeader(table: HTMLTableElement) {
     const headerRow = table.querySelector("thead>tr")!;
     const headers = headerRow.querySelectorAll("tr>th");
-    if (headers[0].textContent === "Cover") {
+    if (headers[0].textContent === "Metadata") {
         return;
     }
 
     const header = document.createElement("th");
-    header.textContent = "Cover";
+    header.textContent = "Metadata";
     header.className = "header";
 
     headerRow.prepend(header);

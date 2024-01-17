@@ -1,4 +1,5 @@
 import { Config } from "../../../../config";
+import { createShowButton } from "../modify_row";
 
 export function reRenderDescriptions(config: Config) {
     const titleCells = document.querySelectorAll<HTMLTableCellElement>(
@@ -13,19 +14,21 @@ export function reRenderDescriptions(config: Config) {
         if (!container) {
             continue;
         }
-        const showButton = cell.querySelector<HTMLAnchorElement>("a.ex--show");
-        if (!showButton) {
-            // There is no paragraph hidden.
-            continue;
+        const paragraphs =
+            container.querySelectorAll<HTMLParagraphElement>("p");
+
+        let showButton = cell.querySelector<HTMLAnchorElement>("a.ex--show");
+        if (!showButton && paragraphs.length > threshold) {
+            showButton = createShowButton(container);
+            cell.appendChild(showButton);
+        } else if (showButton && paragraphs.length <= threshold) {
+            showButton.remove();
         }
-        if (showButton.textContent === "Show Less") {
+        if (showButton?.textContent === "Show Less") {
             // Paragraphs are currently expanded for this container.
             // No need to hide any paragraphs.
             continue;
         }
-
-        const paragraphs =
-            container.querySelectorAll<HTMLParagraphElement>("p");
 
         for (let i = 0; i < paragraphs.length; i++) {
             if (i < threshold) {

@@ -161,42 +161,46 @@ function addDescriptionToElement(data: ReleaseTableDetail, target: Element) {
         target.appendChild(descriptionContainer);
 
         if (i > hideThreshold) {
-            const showButton = document.createElement("a");
-            showButton.classList.add("ex--show");
-            showButton.href = "#";
-            showButton.textContent = "Show More";
-            showButton.style.fontSize = "small";
-            showButton.style.marginTop = "1rem";
-            showButton.style.paddingBottom = "2rem";
-            showButton.style.textDecorationLine = "underline";
-
-            let show = false;
-
-            showButton.addEventListener("click", (e) => {
-                e.preventDefault();
-                store.config().then((config) => {
-                    const threshold =
-                        config.home.description.paragraph_threshold;
-                    if (show) {
-                        let j = 0;
-                        for (const p of descriptionContainer.children) {
-                            if (j >= threshold) {
-                                (p as HTMLElement).style.display = "none";
-                            }
-                            j++;
-                        }
-                        showButton.textContent = "Show More";
-                    } else {
-                        for (const p of descriptionContainer.children) {
-                            (p as HTMLElement).style.display = "block";
-                        }
-                        showButton.textContent = "Show Less";
-                    }
-                    show = !show;
-                });
-            });
-
+            const showButton = createShowButton(descriptionContainer);
             target.appendChild(showButton);
         }
     });
+}
+
+export function createShowButton(descriptionContainer: Element) {
+    const showButton = document.createElement("a");
+    showButton.classList.add("ex--show");
+    showButton.href = "#";
+    showButton.textContent = "Show More";
+    showButton.style.fontSize = "small";
+    showButton.style.marginTop = "1rem";
+    showButton.style.paddingBottom = "2rem";
+    showButton.style.textDecorationLine = "underline";
+
+    let show = false;
+
+    showButton.addEventListener("click", (e) => {
+        e.preventDefault();
+        store.config().then((config) => {
+            const threshold = config.home.description.paragraph_threshold;
+            if (show) {
+                let j = 0;
+                for (const p of descriptionContainer.children) {
+                    if (j >= threshold) {
+                        (p as HTMLElement).style.display = "none";
+                    }
+                    j++;
+                }
+                showButton.textContent = "Show More";
+            } else {
+                for (const p of descriptionContainer.children) {
+                    (p as HTMLElement).style.display = "block";
+                }
+                showButton.textContent = "Show Less";
+            }
+            show = !show;
+        });
+    });
+
+    return showButton;
 }
