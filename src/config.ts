@@ -50,7 +50,7 @@ export const defaultConfig: Config = {
             value: "100vw",
         },
         description: {
-            paragraph_threshold: 2,
+            paragraph_threshold: 3,
         },
         scribble_hub: {
             hide: false,
