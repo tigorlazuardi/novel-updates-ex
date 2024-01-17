@@ -7,7 +7,7 @@ export function createTooltip(tooltip: string) {
     tooltipGroup.appendChild(hr1);
 
     const tip = document.createElement("span");
-    tip.textContent = tooltip;
+    tip.innerHTML = tooltip;
     tooltipGroup.appendChild(tip);
     tip.style.fontSize = "small";
 
