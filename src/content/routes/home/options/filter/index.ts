@@ -1,6 +1,7 @@
 import { Config } from "../../../../../config";
 import { ConfigChangedCallback } from "../callback";
 import { createOptionGroup } from "../create_option_group";
+import { createExcludeOriginsOption } from "./exclude_origins";
 
 export function createFilterOption(
     config: Config,
@@ -12,5 +13,12 @@ export function createFilterOption(
         "ex--filter-options",
         "Filter Options",
     );
+
+    const [excludeOriginsLabel, excludeOriginsInput] =
+        createExcludeOriginsOption(config, signal);
+
+    filterOptionGrid.appendChild(excludeOriginsLabel);
+    filterOptionGrid.appendChild(excludeOriginsInput);
+
     return filterOptionGroup;
 }

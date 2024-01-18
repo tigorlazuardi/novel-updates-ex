@@ -1,17 +1,21 @@
 import browser from "webextension-polyfill";
 import { defaultConfig } from "../config";
 import * as routes from "./routes";
-import merge from "lodash.merge";
+import mergeWith from "lodash.mergewith";
 
 async function prepare() {
     // uncomment when needed
 
     // if (process.env.NODE_ENV === "development") {
     //     await browser.storage.local.clear();
-    //     log("info", "DEV: cache cleared");
+    //     console.log("info", "DEV: cache cleared");
     // }
     const previousConfig = await browser.storage.local.get("config");
-    const config = merge(defaultConfig, previousConfig.config);
+    const config = mergeWith(
+        defaultConfig,
+        previousConfig.config,
+        (_: any, mod: any) => (Array.isArray(mod) ? mod : undefined),
+    );
     await browser.storage.local.set({ config });
 }
 

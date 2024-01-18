@@ -1,3 +1,4 @@
+import { Config } from "../../../../config";
 import store from "../../../../store";
 import { ConfigChangedCallback } from "./callback";
 import { createFilterOption } from "./filter";
@@ -27,12 +28,14 @@ export async function renderOption(cb: ConfigChangedCallback) {
 
     divOption.appendChild(pre);
 
-    const tableOptions = createTableOption(config, (cfg) => {
+    const callback = (cfg: Config) => {
         pre.innerText = JSON.stringify(cfg, null, 4);
         cb(cfg);
-    });
+    };
 
-    const filterOptions = createFilterOption(config, cb);
+    const tableOptions = createTableOption(config, callback);
+
+    const filterOptions = createFilterOption(config, callback);
 
     divOption.appendChild(tableOptions);
     divOption.appendChild(filterOptions);

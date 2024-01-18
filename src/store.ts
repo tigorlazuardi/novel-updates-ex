@@ -1,4 +1,4 @@
-import merge from "lodash.merge";
+import mergeWith from "lodash.mergewith";
 import browser from "webextension-polyfill";
 import { Config } from "./config";
 import { StoreMap } from "./types/store";
@@ -55,7 +55,12 @@ class Store {
 
     async updateConfig(config: DeepPartial<Config>) {
         const currentConfig = await this.config();
-        const newConfig = merge(currentConfig, config);
+        const newConfig = mergeWith(currentConfig, config, (_, mod) => {
+            if (Array.isArray(mod)) {
+                return mod;
+            }
+            return undefined;
+        });
         browser.storage.local.set({
             config: newConfig,
         });
