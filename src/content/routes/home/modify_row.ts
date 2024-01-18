@@ -33,7 +33,7 @@ export function modifyRow(row: HTMLTableRowElement, data: ReleaseTableDetail) {
     const divOriginRating = document.createElement("div");
     divOriginRating.style.display = "flex";
     divOriginRating.style.placeContent = "center";
-    divOriginRating.style.flexWrap = "nowrap";
+    divOriginRating.style.flexWrap = "wrap";
     divOriginRating.style.gap = "0.75rem";
     addOriginToElement(data, divOriginRating);
     addOriginAttributeToElement(data, row);
