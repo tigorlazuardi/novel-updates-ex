@@ -1,4 +1,3 @@
-import { contentEvent } from "../../events";
 import { Origin, Rating, ReleaseDetail } from "./extract_tables";
 
 export function extractDetailFromHTML(html: string): ReleaseDetail {
@@ -14,8 +13,10 @@ export function extractDetailFromHTML(html: string): ReleaseDetail {
 }
 
 function extractImageCover(doc: Document) {
+    // Logged in
     let el = doc.querySelector(".serieseditimg>img") as HTMLImageElement | null;
     if (!el) {
+        // Not logged in
         el = doc.querySelector(".seriesimg>img") as HTMLImageElement | null;
     }
     if (!el) {

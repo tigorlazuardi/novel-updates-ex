@@ -118,10 +118,11 @@ export function consolidateTable(root: Element) {
             releaseColumn.replaceChildren();
 
             const titleColumn = row.children[0] as HTMLTableCellElement;
-            titleColumn.style.paddingRight = "1rem";
+            titleColumn.style.paddingRight = "2rem";
             titleColumn.style.paddingTop = "1rem";
             titleColumn.style.paddingBottom = "1rem";
             titleColumn.removeAttribute("width");
+
             const titleLink = titleColumn.querySelector("a")!;
             titleLink.textContent = titleLink.title;
             titleLink.style.fontWeight = "bold";
