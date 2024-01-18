@@ -137,7 +137,6 @@ function addDescriptionToElement(data: ReleaseTableDetail, target: Element) {
         descriptionContainer.classList.add("ex--description");
         descriptionContainer.style.marginTop = "1rem";
         descriptionContainer.style.marginBottom = "1rem";
-        // descriptionContainer.style.paddingRight = "3rem";
 
         const hideThreshold = config.home.description.paragraph_threshold;
         let i = 0;
