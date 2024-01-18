@@ -1,8 +1,9 @@
 import { Config } from "../../../../config";
 import store from "../../../../store";
-import { createExpandTableInputOption } from "./expand_table_width";
-import { createParagraphThresholdInput } from "./paragraph_threshold_option";
+import { createExpandTableInputOption } from "./table/expand_table_width";
+import { createParagraphThresholdInput } from "./table/paragraph_threshold_option";
 import { RenderSignal } from "./signal";
+import { createTableOption } from "./table";
 
 export type ReRenderFn = (config: Config, div: HTMLDivElement) => void;
 
@@ -39,48 +40,4 @@ export async function renderOption(render: ReRenderFn) {
 
     divOption.appendChild(tableOptions);
     render(config, divOption);
-}
-
-export function createTableOption(config: Config, signal: RenderSignal) {
-    const div = document.createElement("div");
-    div.id = "ex--table-option";
-    const [tableOptionGroup, tableOptionGrid] = createOptionGroup();
-    const tableOptionHeader = document.createElement("b");
-    tableOptionHeader.textContent = "Table Options";
-    const tableOptionBreak = document.createElement("hr");
-
-    div.appendChild(tableOptionHeader);
-    div.appendChild(tableOptionBreak);
-    div.appendChild(tableOptionGroup);
-
-    const [paragraphThresholdLabel, paragraphThresholdInput] =
-        createParagraphThresholdInput(config, signal);
-
-    tableOptionGrid.appendChild(paragraphThresholdLabel);
-    tableOptionGrid.appendChild(paragraphThresholdInput);
-
-    const [expandTableLabel, expandTableInput] = createExpandTableInputOption(
-        config,
-        signal,
-    );
-
-    tableOptionGrid.appendChild(expandTableLabel);
-    tableOptionGrid.appendChild(expandTableInput);
-
-    return div;
-}
-
-function createOptionGroup() {
-    const div = document.createElement("div");
-    const grid = createGridContainer();
-    div.appendChild(grid);
-    return [div, grid] as const;
-}
-
-function createGridContainer() {
-    const grid = document.createElement("div");
-    grid.style.display = "grid";
-    grid.style.gridTemplateColumns = "1fr 1fr";
-    grid.style.gap = "1rem";
-    return grid;
 }

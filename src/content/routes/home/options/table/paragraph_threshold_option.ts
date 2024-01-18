@@ -1,7 +1,7 @@
-import { Config } from "../../../../config";
-import store from "../../../../store";
-import { type RenderSignal } from "./signal";
-import { createTooltip } from "./tooltip";
+import { Config } from "../../../../../config";
+import store from "../../../../../store";
+import { type RenderSignal } from "../signal";
+import { createTooltip } from "../tooltip";
 
 export function createParagraphThresholdInput(
     config: Config,
