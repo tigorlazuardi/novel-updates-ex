@@ -1,10 +1,13 @@
 import { Config } from "../../../../../config";
+import { ConfigChangedCallback } from "../callback";
 import { createOptionGroup } from "../create_option_group";
-import { RenderSignal } from "../signal";
 import { createExpandTableInputOption } from "./expand_table_width";
 import { createParagraphThresholdInput } from "./paragraph_threshold_option";
 
-export function createTableOption(config: Config, signal: RenderSignal) {
+export function createTableOption(
+    config: Config,
+    signal: ConfigChangedCallback,
+) {
     const div = document.createElement("div");
     div.id = "ex--table-option";
     const [tableOptionGroup, tableOptionGrid] = createOptionGroup();

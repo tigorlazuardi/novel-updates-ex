@@ -1,11 +1,6 @@
-import { Config } from "../../../../config";
 import store from "../../../../store";
-import { createExpandTableInputOption } from "./table/expand_table_width";
-import { createParagraphThresholdInput } from "./table/paragraph_threshold_option";
-import { RenderSignal } from "./signal";
+import { ConfigChangedCallback } from "./callback";
 import { createTableOption } from "./table";
-
-export type ReRenderFn = (config: Config, div: HTMLDivElement) => void;
 
 /**
  * renderOption renders the option container.
@@ -13,7 +8,7 @@ export type ReRenderFn = (config: Config, div: HTMLDivElement) => void;
  * the render function will be called whenever the option container values
  * have changed.
  */
-export async function renderOption(render: ReRenderFn) {
+export async function renderOption(cb: ConfigChangedCallback) {
     const config = await store.config();
     const divOption = document.createElement("div");
     divOption.id = "ex--option";
@@ -31,13 +26,13 @@ export async function renderOption(render: ReRenderFn) {
 
     divOption.appendChild(pre);
 
-    const tableOptions = createTableOption(config, () => {
-        store.config().then((config) => {
-            pre.innerText = JSON.stringify(config, null, 4);
-            render(config, divOption);
-        });
+    const tableOptions = createTableOption(config, (cfg) => {
+        pre.innerText = JSON.stringify(cfg, null, 4);
+        cb(cfg);
     });
 
     divOption.appendChild(tableOptions);
-    render(config, divOption);
+    cb(config);
+
+    return divOption;
 }

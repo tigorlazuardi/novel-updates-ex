@@ -56,9 +56,10 @@ class Store {
     async updateConfig(config: DeepPartial<Config>) {
         const currentConfig = await this.config();
         const newConfig = merge(currentConfig, config);
-        return browser.storage.local.set({
+        browser.storage.local.set({
             config: newConfig,
         });
+        return newConfig as Config;
     }
 
     getSize(obj: object): number {

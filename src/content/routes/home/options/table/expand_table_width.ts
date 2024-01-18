@@ -1,11 +1,11 @@
 import { Config } from "../../../../../config";
 import store from "../../../../../store";
-import { type RenderSignal } from "../signal";
+import { type ConfigChangedCallback } from "../callback";
 import { createTooltip } from "../tooltip";
 
 export function createExpandTableInputOption(
     config: Config,
-    signal: RenderSignal,
+    signal: ConfigChangedCallback,
 ) {
     const label = createLabel();
 
@@ -64,7 +64,7 @@ function createLabel() {
     return label;
 }
 
-function createCheckbox(config: Config, signal: RenderSignal) {
+function createCheckbox(config: Config, signal: ConfigChangedCallback) {
     const input = document.createElement("input");
     input.type = "checkbox";
     input.name = "ex-expand-table-width";
@@ -81,14 +81,14 @@ function createCheckbox(config: Config, signal: RenderSignal) {
                     },
                 },
             })
-            .then(() => signal());
+            .then((cfg) => signal(cfg));
     });
     input.style.display = "block";
     input.style.position = "static";
     return input;
 }
 
-function createWidthInput(config: Config, signal: RenderSignal) {
+function createWidthInput(config: Config, signal: ConfigChangedCallback) {
     const input = document.createElement("input");
     input.type = "text";
     input.name = "ex-expand-table-width-value";
@@ -106,7 +106,7 @@ function createWidthInput(config: Config, signal: RenderSignal) {
                     },
                 },
             })
-            .then(() => signal());
+            .then((cfg) => signal(cfg));
     });
 
     return input;

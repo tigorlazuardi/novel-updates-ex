@@ -1,11 +1,11 @@
 import { Config } from "../../../../../config";
 import store from "../../../../../store";
-import { type RenderSignal } from "../signal";
 import { createTooltip } from "../tooltip";
+import { ConfigChangedCallback } from "../callback";
 
 export function createParagraphThresholdInput(
     config: Config,
-    signal: RenderSignal,
+    signal: ConfigChangedCallback,
 ) {
     const label = document.createElement("label");
     label.setAttribute("for", "ex-paragraph-threshold");
@@ -58,7 +58,7 @@ export function createParagraphThresholdInput(
                     },
                 },
             })
-            .then(() => signal());
+            .then((cfg) => signal(cfg));
     });
     return [label, input] as const;
 }
