@@ -47,17 +47,18 @@ function createCheckbox(
 ) {
     const div = document.createElement("div");
     div.style.display = "flex";
-    div.style.placeContent = "center";
 
     const inputName = "ex-exclude-origin-" + label.toLowerCase();
+    const divLabel = document.createElement("div");
+    divLabel.style.padding = "0px 0px 0.25rem 0.5rem";
+    divLabel.style.display = "flex";
+    divLabel.style.alignItems = "center";
+
     const inputLabel = document.createElement("label");
     inputLabel.setAttribute("for", inputName);
     inputLabel.textContent = label;
-    inputLabel.style.margin = "0";
-    inputLabel.style.position = "static";
-    inputLabel.style.display = "inline-block";
-    inputLabel.style.padding = "0px 0px 0.25rem 0.5rem";
     inputLabel.style.fontWeight = "bold";
+    divLabel.appendChild(inputLabel);
 
     switch (label) {
         case "[KR]":
@@ -105,7 +106,7 @@ function createCheckbox(
     inputLabel.addEventListener("click", () => input.click());
 
     div.appendChild(input);
-    div.appendChild(inputLabel);
+    div.appendChild(divLabel);
 
     return div;
 }
