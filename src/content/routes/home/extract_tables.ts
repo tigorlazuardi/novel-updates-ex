@@ -1,6 +1,6 @@
 import { modifyRow } from "./modify_row";
 
-export type Origin = "[KR]" | "[CN]" | "[JP]" | "";
+export type Origin = "[KR]" | "[CN]" | "[JP]" | "[OTHER]";
 
 export type ReleaseChapter = {
     name: string;
@@ -94,7 +94,7 @@ export function extractEntry(row: HTMLTableRowElement, index: number): Entry {
         releases.push({ group: { name: groupName, url: groupUrl }, chapters });
     }
 
-    return { index, origin: origin ?? "", title, release: releases };
+    return { index, origin: origin ?? "[OTHER]", title, release: releases };
 }
 
 export function extractReleaseTable(root: Element): ReleaseTable[] {

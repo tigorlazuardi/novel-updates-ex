@@ -65,11 +65,11 @@ function extractRating(doc: Document): Rating {
 function extractOrigin(doc: Document): Origin {
     const el = doc.querySelector<HTMLSpanElement>("div#showtype > span");
     if (!el) {
-        return "";
+        return "[OTHER]";
     }
     const text = el.textContent?.trim();
     if (!text) {
-        return "";
+        return "[OTHER]";
     }
     return mapOrigin(text);
 }
@@ -83,6 +83,6 @@ function mapOrigin(origin: string): Origin {
         case "(JP)":
             return "[JP]";
         default:
-            return "";
+            return "[OTHER]";
     }
 }

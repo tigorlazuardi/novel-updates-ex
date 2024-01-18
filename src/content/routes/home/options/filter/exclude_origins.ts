@@ -35,7 +35,7 @@ function createCheckboxGroup(config: Config, signal: ConfigChangedCallback) {
     const checkboxCN = createCheckbox(config, "[CN]", signal);
     div.appendChild(checkboxCN);
 
-    const checkboxOther = createCheckbox(config, "", signal);
+    const checkboxOther = createCheckbox(config, "[OTHER]", signal);
     div.appendChild(checkboxOther);
     return div;
 }
@@ -47,14 +47,29 @@ function createCheckbox(
 ) {
     const div = document.createElement("div");
     div.style.display = "flex";
-    div.style.alignItems = "center";
+    div.style.placeContent = "center";
 
-    const inputName = "ex-exclude-origin-" + label.toLowerCase() || "other";
+    const inputName = "ex-exclude-origin-" + label.toLowerCase();
     const inputLabel = document.createElement("label");
     inputLabel.setAttribute("for", inputName);
-    inputLabel.textContent = label || "[Others]";
+    inputLabel.textContent = label;
     inputLabel.style.margin = "0";
     inputLabel.style.position = "static";
+    inputLabel.style.display = "inline-block";
+    inputLabel.style.padding = "0px 0px 0.25rem 0.5rem";
+    inputLabel.style.fontWeight = "bold";
+
+    switch (label) {
+        case "[KR]":
+            inputLabel.classList.add("orgkr");
+            break;
+        case "[JP]":
+            inputLabel.classList.add("orgjp");
+            break;
+        case "[CN]":
+            inputLabel.classList.add("orgcn");
+            break;
+    }
 
     const input = document.createElement("input");
     input.type = "checkbox";
