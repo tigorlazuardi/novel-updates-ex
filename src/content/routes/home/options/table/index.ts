@@ -8,16 +8,10 @@ export function createTableOption(
     config: Config,
     signal: ConfigChangedCallback,
 ) {
-    const div = document.createElement("div");
-    div.id = "ex--table-option";
-    const [tableOptionGroup, tableOptionGrid] = createOptionGroup();
-    const tableOptionHeader = document.createElement("b");
-    tableOptionHeader.textContent = "Table Options";
-    const tableOptionBreak = document.createElement("hr");
-
-    div.appendChild(tableOptionHeader);
-    div.appendChild(tableOptionBreak);
-    div.appendChild(tableOptionGroup);
+    const [tableOptionGroup, tableOptionGrid] = createOptionGroup(
+        "ex--table-options",
+        "Table Options",
+    );
 
     const [paragraphThresholdLabel, paragraphThresholdInput] =
         createParagraphThresholdInput(config, signal);
@@ -33,5 +27,5 @@ export function createTableOption(
     tableOptionGrid.appendChild(expandTableLabel);
     tableOptionGrid.appendChild(expandTableInput);
 
-    return div;
+    return tableOptionGroup;
 }

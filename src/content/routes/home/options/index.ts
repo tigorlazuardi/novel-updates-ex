@@ -1,5 +1,6 @@
 import store from "../../../../store";
 import { ConfigChangedCallback } from "./callback";
+import { createFilterOption } from "./filter";
 import { createTableOption } from "./table";
 
 /**
@@ -31,8 +32,10 @@ export async function renderOption(cb: ConfigChangedCallback) {
         cb(cfg);
     });
 
+    const filterOptions = createFilterOption(config, cb);
+
     divOption.appendChild(tableOptions);
-    cb(config);
+    divOption.appendChild(filterOptions);
 
     return divOption;
 }
