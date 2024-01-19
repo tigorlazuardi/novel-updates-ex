@@ -6,12 +6,24 @@ export type Config = {
             include_favorites: boolean;
             exclude_origins: Origin[];
             rating: {
-                gte: number;
-                lte: number;
+                gte: {
+                    enable: boolean;
+                    value: number;
+                };
+                lte: {
+                    enable: boolean;
+                    value: number;
+                };
             };
             votes: {
-                gte: number;
-                lte: number;
+                gte: {
+                    enable: boolean;
+                    value: number;
+                };
+                lte: {
+                    enable: boolean;
+                    value: number;
+                };
             };
         };
         expand_table_width: {
@@ -37,12 +49,24 @@ export const defaultConfig: Config = {
             include_favorites: false,
             exclude_origins: [],
             rating: {
-                gte: -1,
-                lte: -1,
+                gte: {
+                    enable: false,
+                    value: 0,
+                },
+                lte: {
+                    enable: false,
+                    value: 5,
+                },
             },
             votes: {
-                gte: -1,
-                lte: -1,
+                gte: {
+                    enable: false,
+                    value: 0,
+                },
+                lte: {
+                    enable: false,
+                    value: 100_000,
+                },
             },
         },
         expand_table_width: {

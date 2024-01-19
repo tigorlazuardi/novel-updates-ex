@@ -39,8 +39,9 @@ export async function handle(_: HandlerContext) {
                     "home::release-table::fetch-details",
                 )
                 .then(async (cache) => {
+                    const config = await store.config();
                     if (cache) {
-                        await applyDetail(document.body, {
+                        await applyDetail(document.body, config, {
                             entry,
                             detail: cache,
                             index: {
@@ -55,7 +56,7 @@ export async function handle(_: HandlerContext) {
                     });
                     const text = await response.text();
                     const detail = extractDetailFromHTML(text);
-                    await applyDetail(document.body, {
+                    await applyDetail(document.body, config, {
                         entry,
                         detail,
                         index: {
