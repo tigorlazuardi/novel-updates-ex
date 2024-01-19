@@ -40,7 +40,7 @@ export async function handle(_: HandlerContext) {
                 )
                 .then(async (cache) => {
                     if (cache) {
-                        applyDetail(document.body, {
+                        await applyDetail(document.body, {
                             entry,
                             detail: cache,
                             index: {
@@ -55,7 +55,7 @@ export async function handle(_: HandlerContext) {
                     });
                     const text = await response.text();
                     const detail = extractDetailFromHTML(text);
-                    applyDetail(document.body, {
+                    await applyDetail(document.body, {
                         entry,
                         detail,
                         index: {

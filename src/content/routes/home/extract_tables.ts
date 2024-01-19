@@ -1,3 +1,4 @@
+import store from "../../../store";
 import { modifyRow } from "./modify_row";
 
 export type Origin = "[KR]" | "[CN]" | "[JP]" | "[OTHER]";
@@ -120,7 +121,8 @@ export function extractReleaseTable(root: Element): ReleaseTable[] {
     return out;
 }
 
-export function applyDetail(root: Element, data: ReleaseTableDetail) {
+export async function applyDetail(root: Element, data: ReleaseTableDetail) {
+    // const config = await store.config();
     const tables = root.querySelectorAll<HTMLTableElement>("table.tablesorter");
     const table = tables[data.index.table];
     if (!table) {
@@ -130,6 +132,12 @@ export function applyDetail(root: Element, data: ReleaseTableDetail) {
     const row = rows[data.index.entry] as HTMLTableRowElement;
     if (!row) {
         return;
+    }
+    console.log("row", row);
+    console.log("dataset", row.dataset);
+    console.log(row.getAttribute("ex-origin"));
+    for (const key in row.dataset) {
+        console.log("key", key);
     }
     modifyRow(row, data);
 }
